@@ -1,344 +1,187 @@
-# 1/9/2020
-# def search(array, left, right, target):
-#     if left > right:
-#         return -1
-#     mid = left + (right - left) // 2
-#     if array[mid] == target:
-#         return mid
-#     elif array[mid] > target:
-#         right = mid - 1
-#         result = search(array, left, right, target)
-#     else:
-#         left = mid + 1
-#         result = search(array, left, right, target)
-#     return result
-
-# def search2(array, target):
-#     # first judge empty matrix
-#     if len(array) == 0:
-#         return -1
-#     left =  0
-#     right = len(test) - 1
-#     while left <= right:
-#         mid = left + (right - left) // 2
-#         if target == array[mid]:
-#             return mid
-#         elif target > array[mid]:
-#             left = mid + 1
-#         else:
-#             right = mid - 1
-#     return -1
-
-# 1/11/2020
-# def search(array, target):
-#     left = 0
-#     right = len(array) - 1
-#     while left <= right:
-#         mid = left + (right - left)//2
-#         if target > array[mid]:
-#             left = mid + 1
-#         elif target < array[mid]:
-#             right = mid - 1
-#         else:
-#             return mid
-#     return -1
-
-# def search2(array, left, right, target):
-#     if left > right:
-#         return -1
-#     mid = left + (right - left)//2
-#     if target == array[mid]:
-#         return mid
-#     elif target > array[mid]:
-#         left = mid + 1
-#         result = search2(array, left, right, target)
-#     else:
-#         right = mid - 1
-#         result = search2(array, left, right, target)
-#     return result
-# 3/10/2020
-def search(array, left, right, target):
-    if left > right:
+# 6/28/2020
+# assuming array is not None and len(array) >= 1
+def binarySearchRecursion(array, startIndex, endIndex, target):
+    if startIndex > endIndex:
         return -1
-    mid = left + (right - left)//2
-    if array[mid] > target:
-        right = mid - 1
-    elif array[mid] == target:
-        return mid
+    midIndex = startIndex + (endIndex - startIndex) // 2
+    if array[midIndex] < target:
+        return binarySearchRecursion(array, midIndex + 1, endIndex, target)
+    elif array[midIndex] > target:
+        return binarySearchRecursion(array, startIndex, midIndex - 1, target)
     else:
-        left = mid + 1
-    result = search(array, left, right, target)
-    return result
-# 1/12/2020
-# def search2D(array, target):
-#     row = len(array)
-#     column = len(array[0])
-#     left = 0
-#     right = row * column - 1
-#     while left <= right:
-#         mid = left + (right - left)//2
-#         if target > array[mid // column][mid % column]:
-#             left = mid + 1
-#         elif target < array[mid // column][mid % column]:
-#             right = mid - 1
-#         else:
-#             return [mid // column, mid % column]
-#     return -1
+        return midIndex
 
-# def searchclosest(array, target):
-#     left = 0
-#     right = len(array) - 1
-#     if len(array) < 1:
-#         return -1
-#     while left < right - 1:
-#         mid = left + (right - left)//2
-#         if target > array[mid]:
-#             left = mid
-#         elif target < array[mid]:
-#             right = mid
-#         else:
-#             return mid
-#     # post processing
-#     if abs(left - target) > abs(right - target):
-#         return array[right]
-#     else:
-#         return array[left]
-# def firstoccur(array, target):
-#     left = 0
-#     right = len(array) - 1
-#     while left < right - 1:
-#         mid = left + (right - left)//2
-#         if target > array[mid]:
-#             left = mid + 1
-#         elif target < array[mid]:
-#             right = mid - 1
-#         else:
-#             right = mid
-#     if array[left] == target:
-#         return left
-#     elif array[right] == target:
-#         return right
-#     else:
-#         return -1
-# def unknown(dic, target):
-#     left = 0
-#     right = 1
-#     while dic.get(right) and dic.get(right) < target:
-#         left = right + 1
-#         right = right * 2
-#     while left <= right:
-#         mid = left + (right - left)//2
-#         if dic.get(mid):
-#             if target < dic.get(mid):
-#                 right = mid - 1
-#             elif target > dic.get(mid):
-#                 left = mid + 1
-#             else:
-#                 return mid
-#         right = mid - 1
-#     return -1
-
-
-# 1/13/2020
-# def search(array, left, right, target):
-#     if left > right:
-#         return -1
-#     mid = left + (right - left)//2
-#     if target == array[mid]:
-#         return mid
-#     elif target > array[mid]:
-#         left = mid + 1
-#         result = search(array, left, right, target)
-#     else:
-#         right = mid - 1
-#         result = search(array, left, right, target)
-#     return result
-def search2D(array, left, right, target, columns):
-    if left > right:
+def binarySearchIteration(array, target):
+    if array == None or len(array) == 0:
         return -1
-    mid = left + (right - left) // 2
-    row = mid // columns
-    column = mid % columns
-    if target == array[row][column]:
-        return [row, column]
-    elif target > array[row][column]:
-        left = mid + 1
-        result = search2D(array, left, right, target, columns)
-    else:
-        right = mid - 1
-        result = search2D(array, left, right, target, columns)
-    return result
-# def closest(array, target):
-#     left = 0
-#     right = len(array) - 1
-#     index = 0
-#     while left <= right:
-#         mid = left + (right - left) // 2
-#         if abs(target - array[index]) > abs(target - array[mid]):
-#             index = mid
-#
-#         if target == array[mid]:
-#             return mid
-#         elif target > array[mid]:
-#             left = mid + 1
-#         else:
-#             right = mid - 1
-#     return index
-
-# def first( array, target):
-#     left = 0
-#     right = len(array) - 1
-#     while left <= right:
-#         mid = left + (right - left) // 2
-#         if target == array[mid]:
-#             if mid == 0 or array[mid - 1] < target:
-#                 return mid
-#             else:
-#                 right = mid - 1
-#         elif target > array[mid]:
-#             left = mid + 1
-#         else:
-#             right = mid - 1
-#     return -1
-# 1/30/2020
-# def search(array, left, right, target):
-#     if left > right:
-#         return None
-#     mid = left + (right - left) // 2
-#     if target == array[mid]:
-#         return mid
-#     elif target > array[mid]:
-#         left = mid + 1
-#         result = search(array, left, right, target)
-#     else:
-#         right = mid - 1
-#         result = search(array, left, right, target)
-#     return result
-def searchloop(array, target):
-    left = 0
-    right = len(array) - 1
-    while left <= right:
-        mid = left + (right - left)//2
-        if target == array[mid]:
-            return mid
-        elif target > array[mid]:
-            left = mid + 1
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    while leftIndex <= rightIndex:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if array[midIndex] < target:
+            leftIndex = midIndex + 1
+        elif array[midIndex] > target:
+            rightIndex = midIndex - 1
         else:
-            right = mid - 1
+            return midIndex
+    return -1
+
+def binarySearch2DIteration(matrix, target):
+    if matrix == None or len(matrix) == 0 or len(matrix[0]) == 0:
+        return None
+    rowNum = len(matrix)
+    columnNum = len(matrix[0])
+    leftIndex = 0
+    rightIndex = rowNum * columnNum
+    while leftIndex <= rightIndex:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if matrix[midIndex // columnNum][midIndex % columnNum] > target:
+            rightIndex = midIndex - 1
+        elif matrix[midIndex // columnNum][midIndex % columnNum] < target:
+            leftIndex = midIndex + 1
+        else:
+            return [midIndex // columnNum, midIndex % columnNum]
     return None
-# def closet(array, target):
-#     left = 0
-#     right = len(array) - 1
-#     while left < right - 1:
-#         mid = left + (right - left)//2
-#         if array[mid] == target:
-#             return mid
-#         elif array[mid] > target:
-#             right = mid
-#         else:
-#             left = mid
-#     if abs(array[left] - target) > abs(array[right] - target):
-#         return right
-#     else:
-#         return left
-# def first(array, target):
-#     if len(array) == 0:
-#         return None
-#     left = 0
-#     right = len(array) - 1
-#     while left < right - 1:
-#         mid = left + (right - left)//2
-#         if array[mid] == target:
-#             right = mid
-#         elif array[mid] < target:
-#             left = mid + 1
-#         else:
-#             right = mid - 1
-#     if array[left] == target:
-#         return left
-#     elif array[right] == target:
-#         return right
-#     else:
-#         return None
 
-# 3/11/2020
-def first(array, target, left, right):
-    if left > right:
+def binarySearch2DRecursion(matrix, target, leftIndex, rightIndex, columnNum):
+    if leftIndex > rightIndex:
+        return None
+    midIndex = leftIndex + (rightIndex - leftIndex) // 2
+    if matrix[midIndex // columnNum][midIndex % columnNum] > target:
+        rightIndex = midIndex - 1
+    elif matrix[midIndex // columnNum][midIndex % columnNum] < target:
+        leftIndex = midIndex + 1
+    else:
+        return [midIndex // columnNum, midIndex % columnNum]
+    return binarySearch2DRecursion(matrix, target, leftIndex, rightIndex, columnNum)
+
+def binarySearchClosetIndex1(array, target):
+    if array == None or len(array) == 0:
         return -1
-    mid = left + (right - left)//2
-    if array[mid] == target:
-        if mid == 0 or array[mid - 1] != target:
-            return mid
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    while leftIndex < rightIndex - 1:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if array[midIndex] > target:
+            rightIndex = midIndex
+        elif array[midIndex] < target:
+            leftIndex = midIndex
         else:
-            right = mid - 1
-            result = first(array, target, left, right)
-    elif array[mid] < target:
-        left = mid + 1
-        result = first(array, target, left, right)
+            return midIndex
+    # post processing
+    if abs(target - array[leftIndex]) <= abs(target - array[rightIndex]):
+        return leftIndex
     else:
-        right = mid - 1
-        result = first(array, target, left, right)
-    return result
-def closet(array, target):
-    if len(array) <= 1:
-        return array
-    left = 0
-    right = len(array) - 1
-    while left < right - 1:
-        mid = left + (right - left)//2
-        if array[mid] > target:
-            right = mid
-        elif array[mid] < target:
-            left = mid
-        else:
-            return mid
-    if abs(array[right] - target) < abs(array[left] - target):
-        return right
-    else:
-        return left
-def getsize(array):
-    if array == None or array == []:
-        return 0
-    number = 1
-    while number <= len(array):
-        number = number * 2
-    # binary search for idx//2 to idx
-    start = number//2
-    end = number - 1
-    while start <= end:
-        mid = start + (end - start)//2
-        if mid == len(array):
-            return mid
-        elif mid < len(array):
-            start = mid + 1
-        else:
-            end = mid - 1
+        return rightIndex
 
-def largestSmallerEqual(array, target):
+def binarySearchClosetIndex2(array, target):
+    if array == None or len(array) == 0:
+        return -1
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    closetIndex = 0
+    while leftIndex <= rightIndex:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if abs(target - array[midIndex]) < abs(target - array[closetIndex]):
+            closetIndex = midIndex
+        if array[midIndex] > target:
+            rightIndex = midIndex - 1
+        elif array[midIndex] < target:
+            leftIndex = midIndex + 1
+        else:
+            return midIndex
+    return closetIndex
+
+def binarySearchFirstOccurIndex1(array, target):
+    if array == None or len(array) == 0:
+        return -1
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    while leftIndex < rightIndex - 1:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if array[midIndex] > target:
+            rightIndex = midIndex - 1
+        elif array[midIndex] < target:
+            leftIndex = midIndex + 1
+        else:
+            rightIndex = midIndex
+    # post processing
+    if array[leftIndex] == target:
+        return leftIndex
+    elif array[rightIndex] == target:
+        return rightIndex
+    else:
+        return -1
+
+def binarySearchFirstOccurIndex2(array, target):
+    if array == None or len(array) == 0:
+        return -1
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    while leftIndex <= rightIndex:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if array[midIndex] > target:
+            rightIndex = midIndex - 1
+        elif array[midIndex] < target:
+            leftIndex = midIndex + 1
+        else:
+            if midIndex > 0 and array[midIndex - 1] == target:
+                rightIndex = midIndex - 1
+            else:
+                return midIndex
+    return -1
+
+# assuming keys in dictionary in consecutive starting from 1, values are in ascending order
+# assuming the dictionary at least has 1 key:value pair
+def searchInUnknownSizeDictionary(dictionary, target):
+    if dictionary == None:
+        return None
+    leftIndex = 1
+    rightIndex = 1
+    while rightIndex in dictionary and dictionary[rightIndex] < target:
+        leftIndex = rightIndex + 1
+        rightIndex = rightIndex * 2
+    while leftIndex <= rightIndex:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if midIndex in dictionary:
+            if dictionary[midIndex] < target:
+                leftIndex = midIndex + 1
+            elif dictionary[midIndex] > target:
+                rightIndex = midIndex - 1
+            else:
+                return midIndex
+        else:
+            rightIndex = midIndex - 1
+    return -1
+
+def binarySearchLargestSmallerEqual(array, target):
     if array == None or len(array) == 0:
         return None
-    left = 0
-    right = len(array) - 1
-    while left < right - 1:
-        print(array[left:right + 1])
-        mid = left + (right - left) // 2
-        if array[mid] < target:
-            left = mid
-        elif target < array[mid]:
-            right = mid
+    leftIndex = 0
+    rightIndex = len(array) - 1
+    while leftIndex < rightIndex - 1:
+        midIndex = leftIndex + (rightIndex - leftIndex) // 2
+        if array[midIndex] < target:
+            leftIndex = midIndex
+        elif target < array[midIndex]:
+            rightIndex = midIndex - 1
         else:
-            left = mid
-    print(array[left:right + 1])
-    if array[right] <= target:
-        return right
+            return midIndex
+    if array[rightIndex] <= target:
+        return rightIndex
     else:
-        return left
-test = [[1, 4, 6], [8, 9, 12], [24, 35, 67]]
-test2 =[2, 4, 6, 8, 9, 14, 14, 16, 17, 25, 27, 34, 56]
-dic = {1: 2, 2: 4, 3: 5, 4  : 8, 5: 10, 6: 19}
-bsearch = search(test2, 0, len(test2) - 1, 6)
-final = first(test2, 14, 0, len(test2) - 1)
-clo = closet(test2, 10)
-print(clo)
-print(getsize(test2))
-print(largestSmallerEqual(test2, 14))
+        return leftIndex
+
+original =[2, 4, 6, 8, 9, 14, 14, 16, 17, 25, 27, 34, 56]
+print(binarySearchRecursion(original, 0, len(original) - 1, 6))
+print(binarySearchClosetIndex2(original, 10))
+print(binarySearchFirstOccurIndex1(original, 14))
+print(binarySearchFirstOccurIndex2(original, 14))
+print(binarySearchLargestSmallerEqual(original, 10))
+
+matrix = [[1, 4, 6], [8, 9, 12], [24, 35, 67]]
+print(binarySearch2DIteration(matrix, 67))
+print(binarySearch2DRecursion(matrix, 67, 0, len(matrix) * len(matrix[0]) - 1, len(matrix[0])))
+
+dictionary = {1: 2, 2: 4, 3: 5, 4 : 8, 5: 10, 6: 19}
+print(searchInUnknownSizeDictionary(dictionary, 10))

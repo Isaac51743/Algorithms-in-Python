@@ -1,153 +1,143 @@
-class Queue(object):
-    def __init__(self):
-        self.array = []
-    def push(self, item):
-        self.array.append(item)
-    def pop(self):
-        if len(self.array) == 0:
-            return None
-        tem = self.array[0]
-        self.array = self.array[1:]
-        return tem
-
 class Stack(object):
     def __init__(self):
         self.array = []
-        self.top = None
-    def push(self, item):
-        self.array.append(item)
-        self.top = len(self.array) - 1
-    def empty(self):
-        return self.array == []
-    def gettop(self):
+    def push(self, element): # O(1)
+        self.array.append(element)
+    def pop(self): # amortized O(1)
         if len(self.array) == 0:
+            print('Stack already empty!')
             return None
-        else:
-            return self.array[self.top]
-    def pop(self):
+        topElement = self.array.pop()
+        return topElement
+    def getSize(self):
+        return len(self.array)
+    def getTop(self):
         if len(self.array) == 0:
+            print('Stack already empty!')
             return None
-        elif len(self.array) == 1:
-            tem = self.array[self.top]
-            self.top = None
-            self.array = self.array[:-1]
-            return tem
+        return self.array[-1]
+    def isEmpty(self):
+        return len(self.array) == 0
+    def stackPrint(self, reverse = False): # the bottom is on the left in default
+        if reverse:
+            self.array.reverse()
+            print(self.array)
+            self.array.reverse()
         else:
-            tem = self.array[self.top]
-            self.top = len(self.array) - 2
-            self.array = self.array[:-1]
-            return tem
+            print(self.array)
 
-# 1/30/2020
-class stack(object):
+class Queue(object):
     def __init__(self):
         self.array = []
-        self.top = None
-    def push(self, value):
-        self.array.append(value)
-        self.top = self.array[-1]
-    def empty(self):
-        return self.array == []
-    def gettop(self):
-        return self.top
+    def push(self, element):
+        self.array.append(element)
     def pop(self):
         if len(self.array) == 0:
             return None
-        elif len(self.array) == 1:
-            result = self.array[-1]
-            self.array = []
-            self.top = None
-        else:
-            result = self.top
-            self.array = self.array[:-1]
-            self.top = self.array[-1]
+        result = self.array.pop(0)
         return result
+    def queuePrint(self):
+        print(self.array)
 
-# test = stack()
-# for i in range(10):
-#     test.push(i)
-# print(test.array)
-# while not test.empty():
-#     print(test.pop())
-
-class Queue1(object):
+stack1 = Stack()
+for element in range(10):
+    stack1.push(element)
+stack1.stackPrint()
+while not stack1.isEmpty():
+    print(stack1.pop(), end=' ')
+print()
+# ----------------------------------------------------------------------
+class QueueOfTwoStack(object):
     def __init__(self):
-        self.stack1 = Stack()
-        self.stack2 = Stack()
-
-    def push(self, item):
-        self.stack1.push(item)
-
+        self.leftStack = Stack()
+        self.rightStack = Stack()
+    def push(self, element):
+        self.leftStack.push(element)
     def pop(self):
-        if self.stack1.empty() and self.stack2.empty():
-            return None
-        elif not self.stack1.empty() and self.stack2.empty():
-            while not self.stack1.empty():
-                tem1 = self.stack1.pop()
-                self.stack2.push(tem1)
-            tem2 = self.stack2.pop()
-            return tem2
-        else:
-            tem = self.stack2.pop()
-            return tem
+        if self.rightStack.isEmpty():
+            if self.leftStack.isEmpty():
+                print('queue already empty')
+                return None
+            else:
+                while not self.leftStack.isEmpty():
+                    self.rightStack.push(self.leftStack.pop())
+        return self.rightStack.pop()
+    def queuePrint(self):
+        self.leftStack.stackPrint(reverse = True)
+        self.rightStack.stackPrint()
+    def isEmpty(self):
+        return self.leftStack.isEmpty() and self.rightStack.isEmpty()
 
-class Stack_min(object):
-    def __init__(self):
-        self.stack = Stack()
-        self.record = Stack()
-        self.top = self.stack.top
-
-    def push(self, item):
-        self.stack.push(item)
-        if self.record.empty() or item < self.record.gettop():
-            self.record.push(item)
-        else:
-            self.record.push(self.record.gettop())
-
-    def min(self):
-        return self.record.gettop()
-
-    def pop(self):
-        tem = self.stack.pop()
-        self.record.pop()
-        return tem
-
-# 2/2/2020
-class Stack_minAdvance(object):
+queue1 = QueueOfTwoStack()
+for element in range(10):
+    queue1.push(element)
+queue1.queuePrint()
+while not queue1.isEmpty():
+    print(queue1.pop(), end=' ')
+print()
+# ----------------------------------------------------------------------
+class StackWithMin1():
     def __init__(self):
         self.stack = Stack()
-        self.record = Stack()
-        self.top = self.stack.top
-
-    def push(self, item):
-        self.stack.push(item)
-        # must see whether record is empty (can not see stack)
-        if self.record.empty() or item < self.record.gettop()[0]:
-            self.record.push([item, self.stack.top])
-
-    def pop(self):
-        if self.record.empty():
-            return None
-
-        if self.record.gettop()[-1] == self.stack.top:
-            self.record.pop()
-        tem = self.stack.pop()
-        return tem
-
-    def min(self):
-        if self.record.empty():
-            return None
+        self.currentMin = Stack()
+    def push(self, element):
+        self.stack.push(element)
+        if self.currentMin.isEmpty() or self.currentMin.getTop() > element:
+            self.currentMin.push(element)
         else:
-            return self.record.gettop()[0]
+            self.currentMin.push(self.currentMin.getTop())
+    def pop(self):
+        self.currentMin.pop()
+        return self.stack.pop()
+    def getMin(self):
+        return self.currentMin.getTop()
+    def getSize(self):
+        return self.stack.getSize()
+    def getTop(self):
+        return self.stack.getTop()
+    def isEmpty(self):
+        return self.stack.isEmpty()
+    def stackPrint(self, reverse = False):
+        self.stack.stackPrint(reverse)
+        self.currentMin.stackPrint(reverse)
 
+class StackWithMin2():
+    def __init__(self):
+        self.stack = Stack()
+        # currentMin stores tuple having 2 elements,
+        # first represents size, second represents the minimum value
+        self.currentMin = Stack()
+    def push(self, element):
+        self.stack.push(element)
+        if self.currentMin.isEmpty() or self.currentMin.getTop()[1] > element:
+            self.currentMin.push((self.stack.getSize(), element))
+    def pop(self):
+        if self.currentMin.getSize() != 0 and self.currentMin.getTop()[0] == self.stack.getSize():
+            self.currentMin.pop()
+        return self.stack.pop()
+    def getMin(self):
+        if not self.currentMin.isEmpty():
+            return self.currentMin.getTop()[1]
+        else:
+            return None
+    def getSize(self):
+        return self.stack.getSize()
+    def getTop(self):
+        return self.stack.getTop()
+    def isEmpty(self):
+        return self.stack.isEmpty()
+    def stackPrint(self, reverse = False):
+        self.stack.stackPrint(reverse)
+        self.currentMin.stackPrint(reverse)
 
-test = Stack_minAdvance()
-a = [6, 6, 3, 6, 3, 3, 1, 2, 3]
-for i in a:
-    test.push(i)
-print(test.record.array)
-print(test.stack.array)
-for i in range(len(a)):
-    m = test.min()
-    t = test.pop()
-    print([m, t])
+testArray = [6, 6, 3, 6, 3, 3, 1, 2, 3]
+
+stack2 = StackWithMin1()
+for element in testArray:
+    stack2.push(element)
+stack2.stackPrint()
+
+stack3 = StackWithMin2()
+for element in testArray:
+    stack3.push(element)
+stack3.stackPrint()

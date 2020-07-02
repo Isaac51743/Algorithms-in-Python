@@ -263,7 +263,7 @@ def inOrderIteration(root):
             curNode = stack.pop()
             print(curNode.value, end=' ')
             nextNode = curNode.rightChild
-
+            
 def postOrderIteration(root):
     if root == None:
         return

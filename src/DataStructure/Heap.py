@@ -1,120 +1,134 @@
-a = [1, 3, 6, 5, 4, 7]
-class heap(object):
+class Heap(object):
     def __init__(self):
         self.array = []
 
-    def percolateup(self,index):
+    def percolateUpIteration(self, index):
         if index <= 0:
-            return None
-        parent = (index - 1) // 2
-        if self.array[index] < self.array[parent]:
-            self.array[index], self.array[parent] = self.array[index], self.array[parent]
-            self.percolateup(parent)
-
-    def percolatedown(self, index):
-        if index > len(self.array)//2 - 1:
             return
-        left = index * 2 + 1
-        right = left + 1
-        min = left
-        if right < len(self.array) and self.array[right] < self.array[left]:
-            min = right
-        if self.array[index] > self.array[min]:
-            self.array[index], self.array[min] = self.array[index], self.array[min]
-            self.percolatedown(min)
+        while index > 0:
+            parentIndex = (index - 1) // 2
+            if self.array[index] < self.array[parentIndex]:
+                self.array[parentIndex], self.array[index] = self.array[index], self.array[parentIndex]
+                index = parentIndex
+            else:
+                break
 
+    def percolateUpRecursion(self, index):
+        if index <= 0:
+            return
+        parentIndex = (index - 1) // 2
+        if self.array[index] < self.array[parentIndex]:
+            self.array[parentIndex], self.array[index] = self.array[index], self.array[parentIndex]
+            self.percolateUpRecursion(self, parentIndex)
 
-    def insert(self, val):
-        self.array.append(val)
-        self.percolateup(len(self.array) - 1)
-        return self.array
+    def percolateDownIteration(self, index):
+        if index > len(self.array) // 2 - 1:
+            return
+        while index <= len(self.array) // 2 - 1:
+            indexLeftChild = index * 2 + 1
+            indexRightChild = index * 2 + 2
+            indexMinChild = indexLeftChild
+            if indexRightChild < len(self.array) and self.array[indexRightChild] < self.array[indexLeftChild]:
+                indexMinChild = indexRightChild
+            if self.array[index] > self.array[indexMinChild]:
+                self.array[index], self.array[indexMinChild] = self.array[indexMinChild], self.array[index]
+                index = indexMinChild
+            else:
+                break
 
-    def update(self, index, val):
-        if val == self.array[index]:
-            return self.array
+    def percolateDownRecursion(self, index):
+        if index > len(self.array) // 2 - 1:
+            return
+        indexLeftChild = index * 2 + 1
+        indexRightChild = index * 2 + 2
+        indexMinChild = indexLeftChild
+        if indexRightChild < len(self.array) and self.array[indexRightChild] < self.array[indexLeftChild]:
+            indexMinChild = indexRightChild
+        if self.array[index] > self.array[indexMinChild]:
+            self.array[index], self.array[indexMinChild] = self.array[indexMinChild], self.array[index]
+            self.percolateDownRecursion(self, indexMinChild)
 
-        if val > self.array[index]:
-            self.array[index] = val
-            self.percolatedown(index)
-        elif val < self.array[index]:
-            self.array[index] = val
-            self.percolateup(index)
-        return self.array
+    def isEmpty(self):
+        return len(self.array) == 0
+
+    def getSize(self):
+        return len(self.array)
+
+    def getTop(self):
+        return self.array[0]
 
     def pop(self):
-        if len(self.array) == 0:
+        if self.isEmpty():
+            print('Heap is already empty!')
             return None
-        if len(self.array) == 1:
-            tem = self.array[0]
-            self.array = []
-            return tem
         result = self.array[0]
         self.array[0] = self.array[-1]
-        self.array = self.array[:-1]
-        self.percolatedown(0)
+        self.array.pop()
+        if len(self.array) > 0:
+            self.percolateDownIteration(0)
         return result
 
-d = heap()
-d.array = a
-e = d.pop()
-print("original heap:" + str(d.array))
-f = d.insert(1)
-print("inserted heap:" + str(d.array))
-g = d.update(0, 10)
-print(d.array)
+    def insert(self, number):
+        self.array.append(number)
+        self.percolateUpIteration(len(self.array) - 1)
 
-import heapq as hp
-def firstk1(array, k):
-    hp.heapify(array)
+testHeap = Heap()
+testArray = [2, 4, 2 ,8, 5, 6, 1, 12, 9]
+for element in testArray:
+    testHeap.insert(element)
+while not testHeap.isEmpty():
+    print(testHeap.pop(), end=' ')
+print()
+# ----------------------------------------------------------------------------------
+def findFirstKElement1(array, k):
+    if array == None or len(array) <= k:
+        return array
+    heap = Heap()
+    for element in array:
+        heap.insert(element)
+    result = []
     for i in range(k):
-        print(hp.heappop(array))
-def firstk2(array, k):
-    hh = heap()
-    new = [item * -1 for item in array]
+        result.append(heap.pop())
+    return result
+
+def findFirstKElement2(array, k):
+    if array == None or len(array) <= k:
+        return array
+    heap = Heap()
     for i in range(len(array)):
         if i < k:
-            hh.insert(new[i])
-        elif hh.array[0] < new[i]:
-            hh.update(0, new[i])
-        # print(hh.array)
-    result = []
-
-    for i in range(k):
-        result.append(-1 * hh.pop())
-    return result
-def firstk3(array, k):
-    if len(array) < k:
-        return None
-    if len(array) == k:
-        return array
-
-    # quicksort
-    pivot = array[-1]
-    i = 0
-    j = len(array) - 2
-    while i <= j:
-        if array[i] < pivot:
-            i += 1
+            heap.insert(-1 * array[i])
         else:
-            tem = array[i]
-            array[i] = array[j]
-            array[j] = tem
-            j -= 1
-    tem = array[-1]
-    array[-1] = array[i]
-    array[i] = tem
+            if heap.getTop() < -1 * array[i]:
+                heap.pop()
+                heap.insert(-1 * array[i])
+    result = []
+    for i in range(k):
+        result.append(-1 * heap.pop())
+    return result
 
-    if k < i:
-        result = firstk3(array[:i], k)
-        return result
-    elif k == i or k == i + 1:
-        return array[:k]
+def findFirstKElement3(array, k, leftIndex, rightIndex):
+    if array == None or rightIndex - leftIndex + 1 <= k or k <= 0:
+        return
+    leftBound = leftIndex
+    rightBound = rightIndex - 1
+    while leftBound <= rightBound:
+        if array[leftBound] < array[rightIndex]:
+            leftBound += 1
+        else:
+            array[leftBound], array[rightBound] = array[rightBound], array[leftBound]
+            rightBound -= 1
+    array[leftBound], array[rightIndex] = array[rightIndex], array[leftBound]
+    numberOfSmaller = leftBound - leftIndex
+    if k < numberOfSmaller:
+        findFirstKElement3(array, k, leftIndex, leftBound - 1)
+    elif k == numberOfSmaller:
+        return # array[leftIndex:leftBound]
+    elif k == numberOfSmaller + 1:
+        return # array[leftIndex:leftBound + 1]
     else:
-        sorted = array[:i + 1]
-        # print(sorted)
-        remain = firstk3(array[i + 1:], k - i - 1)
-        return sorted + remain
+        findFirstKElement3(array, k - numberOfSmaller - 1, leftBound + 1, rightIndex)
 
-b = [4, 6, 2, 7, 0, 34, 3]
-c = [1, 2]
-print(firstk2(b, 5))
+print(findFirstKElement2(testArray, 3))
+findFirstKElement3(testArray, 7, 0, len(testArray) - 1)
+print(testArray[:7])

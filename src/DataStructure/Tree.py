@@ -249,6 +249,7 @@ def preOrderIteration(root):
             stack.push(curNode.rightChild)
         if curNode.leftChild != None:
             stack.push(curNode.leftChild)
+
 def inOrderIteration(root):
     if root == None:
         return
@@ -262,10 +263,10 @@ def inOrderIteration(root):
             curNode = stack.pop()
             print(curNode.value, end=' ')
             nextNode = curNode.rightChild
+
 def postOrderIteration(root):
     if root == None:
         return
-
     preNode = None
     stack = DS1.Stack()
     stack.push(root)

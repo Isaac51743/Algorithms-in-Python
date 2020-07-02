@@ -1,331 +1,295 @@
-class Stack(object):
-    def __init__(self):
-        self.array = []
-        self.top = None
-    def push(self, item):
-        self.array.append(item)
-        self.top = len(self.array) - 1
-    def empty(self):
-        return self.array == []
-    def gettop(self):
-        if len(self.array) == 0:
-            return None
-        else:
-            return self.array[self.top]
-    def pop(self):
-        if len(self.array) == 0:
-            return None
-        elif len(self.array) == 1:
-            tem = self.array[self.top]
-            self.top = None
-            self.array = self.array[:-1]
-            return tem
-        else:
-            tem = self.array[self.top]
-            self.top = len(self.array) - 2
-            self.array = self.array[:-1]
-            return tem
-class node(object):
-    def __init__(self, value = -1, lchild = None, rchild = None):
-        self.val = value
-        self.left = lchild
-        self.right = rchild
-    def addleft(self, node):
-        self.left = node
-    def addright(self, node):
-        self.right = node
-class tree(object):
-    def __init__(self, node):
-        self.root = node
+class treeNode(object):
+    def __init__(self, value = -1, leftChild = None, rightChild = None):
+        self.value = value
+        self.leftChild = leftChild
+        self.rightChild = rightChild
+    def addLeft(self, node):
+        self.leftChild = node
+    def addRight(self, node):
+        self.rightChild = node
 
-root1 = node(1)
-root1.addleft(node(2))
-root1.addright(node(3))
-root2 = node(1)
-root2.addleft(node(3))
-root2.addright(node(2))
-root3 = node(10)
-root3.addleft(node(3))
-root3.addright(node(12))
-# root1:        1
+testRoot1 = treeNode(1)
+testRoot1.addLeft(treeNode(2))
+testRoot1.addRight(treeNode(3))
+testRoot2 = treeNode(1)
+testRoot2.addLeft(treeNode(3))
+testRoot2.addRight(treeNode(2))
+testRoot3 = treeNode(10)
+testRoot3.addLeft(treeNode(3))
+testRoot3.addRight(treeNode(12))
+# testRoot1:
+#                  1
 #                /  \
 #              2      3
-# root2:         1
+# testRoot2:
+#                    1
 #                  /  \
 #                3      2
-# root3:         10
+# testRoot3:
+#                   10
 #                  /  \
 #                3      12
-def inorder(node):
-    if node == None:
-        return node
-    inorder(node.left)
-    print(node.val, end=' ')
-    inorder(node.right)
-def search(root, target):
-    if root == None or root.val == target:
-        return root
-    if target > root.val:
-        return search(root.right, target)
-    else:
-        return search(root.left, target)
-def insert(root, target):
+def preOrder(root):
     if root == None:
-        return node(target)
-    if root.val > target:
-        root.left = insert(root.left, target)
-    elif root.val < target:
-        root.right = insert(root.right, target)
-    return root
-def insertIterative(root, target):
-    if root == None:
-        return node(target)
-    pre = None
-    cur = root
-    while cur != None:
-        pre = cur
-        if cur.val > target:
-            cur = cur.left
-        elif cur.val < target:
-            cur = cur.right
-        else:
-            return root
-    if pre.val > target:
-        pre.left = node(target)
-    else:
-        pre.right = node(target)
-    return root
-def insert1(root, target):
-    if root == None:
-        return node(target)
-    helper(root, target)
-def helper(root, target):
-    if root.val == target:
         return
-    if root.val > target:
-        if root.left == None:
-            root.left = node(target)
-        else:
-            helper(root.left, target)
-    elif root.val < target:
-        if root.right == None:
-            root.right = node(target)
-        else:
-            helper(root.right, target)
-def insert2(root, target):
+    print(root.value, end=' ')
+    preOrder(root.leftChild)
+    preOrder(root.rightChild)
+
+def inOrder(root):
     if root == None:
-        return node(target)
-    cur = root
-    while cur.val != target:
-        if cur.val > target:
-            if cur.left != None:
-                cur = cur.left
-            else:
-                cur.left = node(target)
-                break
-        elif cur.val < target:
-            if cur.right != None:
-                cur = cur.right
-            else:
-                cur.right = node(target)
-                break
-    return root
-def remove(root, target):
+        return
+    inOrder(root.leftChild)
+    print(root.value, end=' ')
+    inOrder(root.rightChild)
+
+def postOrder(root):
     if root == None:
-        return None
-    if target > root.val:
-        root.right = remove(root.right, target)
-    elif target < root.val:
-        root.left = remove(root.left, target)
-    else: # root.val == target
-        if root.left == None:
-            return root.right
-        elif root.right == None:
-            return root.left
-        else:
-            if root.right.left == None:
-                root.right.left = root.left
-                return root.right
-            else:
-                smallest = deletemin(root.right)
-                smallest.left = root.left
-                smallest.right = root.right
-            return smallest
-    return root
-def deletemin(root):
-    while root.left != None:
-        pre = root
-        root = root.left
-    pre.left = root.right
-    return root
-def getheight(node):
-    if node == None:
+        return
+    postOrder(root.leftChild)
+    postOrder(root.rightChild)
+    print(root.value, end=' ')
+
+preOrder(testRoot1)
+print()
+inOrder(testRoot1)
+print()
+postOrder(testRoot1)
+print()
+# -----------------------------------------------------------------------------------
+def getHeight(root):
+    if root == None:
         return 0
-    leftheight = getheight(node.left)
-    rightheight = getheight(node.right)
-    if leftheight > rightheight:
-        return leftheight + 1
+    leftHeight = getHeight(root.leftChild)
+    rightheight = getHeight(root.rightChild)
+    if leftHeight > rightheight:
+        return leftHeight + 1
     else:
         return rightheight + 1
-# def getheight(node):
-#     if node == None:
-#         return 0
-#     leftheight = getheight(node.left)
-#     rightheight = getheight(node.right)
-#     if leftheight > rightheight:
-#         return leftheight + 1
-#     else:
-#         return rightheight + 1
-def balanced(node):
-    if node == None:
-        return True
-    leftheight = getheight(node.left)
-    rightheight = getheight(node.right)
-    if abs(leftheight - rightheight) <= 1:
-        return balanced(node.left) and balanced(node.right)
-    else:
-        return False
-# def balanced(node):
-#     if node == None:
-#         return True
-#     leftheight = getheight(node.left)
-#     rightheight = getheight(node.right)
-#     if abs(leftheight - rightheight) <= 1:
-#         return balanced(node.left) and balanced(node.right)
-#     else:
-#         return False
 
-# def symmetric(left, right):
-#     if left == None and right == None:
-#         return True
-#     elif (left == None and right != None) or (right == None and left != None):
-#         return False
-#     elif left.val != right.val:
-#         return False
-#     return symmetric(left.left, right.right) and symmetric(left.right, right.left)
-def symmetric(left, right):
-    if left == None and right == None:
+def isBalanced(root):
+    if root == None:
         return True
-    elif left == None or right == None:
-        return False
-    elif left.val != right.val:
-        return False
+    leftHeight = getHeight(root.leftChild)
+    rightHeight = getHeight(root.rightChild)
+    if abs(leftHeight - rightHeight) <= 1:
+        return isBalanced(root.leftChild) and isBalanced(root.rightChild)
     else:
-        return symmetric(left.left, right.right) and symmetric(left.right, right.left)
-# def identical(left, right):
-#     if left == None and right == None:
-#         return True
-#     elif left == None or right == None:
-#         return False
-#     elif left.val != right.val:
-#         return False
-#     return (identical(left.left, right.right) and identical(left.right, right.left)) or (identical(left.left, right.left) and identical(left.right, right.right))
-def identical(left, right):
-    if left == None and right == None:
+        return False
+
+def isSymmetric(leftNode, rightNode):
+    if leftNode == None and rightNode == None:
         return True
-    elif left != None or right != None:
+    elif leftNode == None or rightNode == None:
         return False
-    elif left.val != right.val:
-        return False
+    elif leftNode.value == rightNode.value:
+        return isSymmetric(leftNode.leftChild, rightNode.rightChild) and isSymmetric(leftNode.rightChild, rightNode.leftChild)
     else:
-        case1 = identical(left.left, right.right) and identical(left.right, right.left)
-        case2 = identical(left.left, right.left) and identical(left.right, right.right)
+        return False
+
+def isIdentical(leftRoot, rightRoot):
+    if leftRoot == None and rightRoot == None:
+        return True
+    elif leftRoot == None or rightRoot == None:
+        return False
+    elif leftRoot.value == rightRoot.value:
+        case1 = isIdentical(leftRoot.leftChild, rightRoot.leftChild) and isIdentical(leftRoot.rightChild, rightRoot.rightChild)
+        case2 = isIdentical(leftRoot.rightChild, rightRoot.leftChild) and isIdentical(leftRoot.leftChild, rightRoot.rightChild)
         return case1 or case2
-import math
-def BST(node, small, big):
-    if node == None:
-        return True
-    if node.val > small and node.val < big:
-        return BST(node.left, small, node.val) and BST(node.right, node.val, big)
     else:
         return False
-def inorderrange(node, small, big):
-    if node == None:
-        return node
 
-    inorderrange(node.left, small, big)
-    if node.val >= small and node.val <= big:
-        print(node.val, end=' ')
-    inorderrange(node.right, small, big)
-def inorderrangeA(node, small, big):
-    if node == None:
-        return None
+print('tree height: ' + str(getHeight(testRoot1)))
+print(isBalanced(testRoot1))
+print(isSymmetric(testRoot2.leftChild, testRoot2.rightChild))
+print(isIdentical(testRoot1, testRoot2))
+# -----------------------------------------------------------------------------------
+def isBST(root, smallerBound, biggerBound):
+    if root == None:
+        return True
+    if root.value > smallerBound and root.value < biggerBound:
+        return isBST(root.leftChild, smallerBound, root.value) and isBST(root.rightChild, root.value, biggerBound)
+    else:
+        return False
+def inOrderInRange(root, smallerBound, biggerBound):
+    if root == None:
+        return
+    if root.value > smallerBound:
+        inOrderInRange(root.leftChild, smallerBound, biggerBound)
+    if root.value >= smallerBound and root.value <= biggerBound:
+        print(root.value, end=' ')
+    if root.value < biggerBound:
+        inOrderInRange(root.rightChild, smallerBound, biggerBound)
 
-    if node.val > small:
-        inorderrangeA(node.left, small, big)
-    if node.val > small and node.val < big:
-        print(node.val, end=' ')
-    if node.val < big:
-        inorderrangeA(node.right, small, big)
-inorder(root2)
+print('whether a BST: ' + str(isBST(testRoot3, float('-inf'), float('inf'))))
+inOrderInRange(testRoot3, 9, 20)
 print()
-print(getheight(root2))
-print(symmetric(root1, root2))
-print(identical(root1, root1))
-print(BST(root3, -math.inf, math.inf))
-inorderrangeA(root3, 0, 11)
+# -----------------------------------------------------------------------------------
+def searchBST(root, target):
+    if root == None or root.value == target:
+        return root
+    if root.value > target:
+        return searchBST(root.leftChild, target)
+    else:
+        return searchBST(root.rightChild, target)
+
+def insertBSTRecursion1(root, target):
+    if root == None:
+        return treeNode(target)
+    if root.value > target:
+        root.leftChild = insertBSTRecursion1(root.leftChild, target)
+    elif root.value < target:
+        root.rightChild = insertBSTRecursion1(root.rightChild, target)
+    return root
+
+def insertBSTIteration1(root, target):
+    if root == None:
+        return treeNode(target)
+    preNode = None
+    curNode = root
+    while curNode != None:
+        preNode = curNode
+        if curNode.value > target:
+            curNode = curNode.leftChild
+        elif curNode.value < target:
+            curNode = curNode.rightChild
+        else:
+            return root
+    if preNode.value > target:
+        preNode.leftChild = treeNode(target)
+    elif preNode.value < target:
+        preNode.rightChild = treeNode(target)
+    return root
+
+def insertBSTRecursion2(root, target):
+    if root == None:
+        return treeNode(target)
+    helper(root, target)
+    return root
+def helper(root, target):
+    if root.value > target:
+        if root.leftChild != None:
+            helper(root.leftChild, target)
+        else:
+            root.leftChild = treeNode(target)
+    elif root.value < target:
+        if root.rightChild != None:
+            helper(root.rightChild, target)
+        else:
+            root.rightChild = treeNode(target)
+
+def insertBSTIteration2(root, target):
+    if root == None:
+        return treeNode(target)
+    curNode = root
+    while curNode.value != target:
+        if curNode.value < target:
+            if curNode.rightChild != None:
+                curNode = curNode.rightChild
+            else:
+                curNode.rightChild = treeNode(target)
+                break
+        elif curNode.value > target:
+            if curNode.leftChild != None:
+                curNode = curNode.leftChild
+            else:
+                curNode.leftChild = treeNode(target)
+                break
+    return root
+def removeBST(root, target):
+    if root == None:
+        return None
+    if target < root.value:
+        root.leftChild = removeBST(root.leftChild, target)
+    elif target > root.value:
+        root.rightChild = removeBST(root.rightChild, target)
+    else:
+        if root.leftChild == None:
+            return root.rightChild
+        elif root.rightChild == None:
+            return root.leftChild
+        else:
+            if root.rightChild.leftChild == None:
+                root.rightChild.leftChild = root.leftChild
+                return root.right
+            else:
+                smallestOnRight = deleteMin(root.rightChild)
+                smallestOnRight.leftChild = root.leftChild
+                smallestOnRight.rightChild = root.rightChild
+                return smallestOnRight
+    return root
+# assuming root must has left child
+def deleteMin(root):
+    preNode = root
+    curNode = root.leftChild
+    while curNode != None:
+        preNode = curNode
+        curNode = curNode.leftChild
+    preNode.leftChild = curNode.rightChild
+    return curNode
+
+print(searchBST(testRoot3, 10))
+newRoot3 = insertBSTRecursion2(testRoot3, 1)
+print(searchBST(newRoot3, 1))
+newRoot3 = insertBSTIteration2(newRoot3, 2)
+print(searchBST(newRoot3, 2))
+newRoot3 = removeBST(newRoot3, 1)
+print(searchBST(newRoot3, 1))
+#------------------------------------------------------------------------------------
+import DataStructure1 as DS1
+def preOrderIteration(root):
+    if root == None:
+        return
+    stack = DS1.Stack()
+    stack.push(root)
+    while not stack.isEmpty():
+        curNode = stack.pop()
+        print(curNode.value, end=' ')
+        if curNode.rightChild != None:
+            stack.push(curNode.rightChild)
+        if curNode.leftChild != None:
+            stack.push(curNode.leftChild)
+def inOrderIteration(root):
+    if root == None:
+        return
+    stack = DS1.Stack()
+    nextNode = root
+    while not stack.isEmpty() or nextNode != None:
+        if nextNode != None:
+            stack.push(nextNode)
+            nextNode = nextNode.leftChild
+        else: # top element is the stack has no left child any more
+            curNode = stack.pop()
+            print(curNode.value, end=' ')
+            nextNode = curNode.rightChild
+def postOrderIteration(root):
+    if root == None:
+        return
+
+    preNode = None
+    stack = DS1.Stack()
+    stack.push(root)
+    while not stack.isEmpty():
+        curNode = stack.getTop()
+        if preNode == None or preNode.leftChild == curNode or preNode.rightChild == curNode:
+            if curNode.leftChild != None:
+                stack.push(curNode.leftChild)
+            elif curNode.rightChild != None:
+                stack.push(curNode.rightChild)
+            else:
+                print(stack.pop().value, end=' ')
+        elif curNode.leftChild == preNode:
+            if curNode.rightChild != None:
+                stack.push(curNode.rightChild)
+            else:
+                print(stack.pop().value, end=' ')
+        else:
+            print(stack.pop().value, end=' ')
+        preNode = curNode
+
+preOrderIteration(testRoot3)
 print()
-insert2(root1, 38)
-print(search(root1, 38).val)
-remove(root1, 38)
-print(search(root1, 38))
-
-def preorderiter(root):
-    if root == None:
-        return None
-    result = []
-    s = Stack()
-    s.push(root)
-    while not s.empty():
-        cur = s.pop()
-        result.append(cur.val)
-        if cur.right != None:
-            s.push(cur.right)
-        if cur.left != None:
-            s.push(cur.left)
-    return result
-def inorderiter(root):
-    if root == None:
-        return None
-    result = []
-    s = Stack()
-    next = root
-    while not s.empty() or next != None:
-        if next != None:
-            s.push(next)
-            next = next.left
-        else:
-            cur = s.pop()
-            result.append(cur.val)
-            next = cur.right
-    return result
-def postorder(root):
-    if root == None:
-        return None
-    result = []
-    s = Stack()
-    s.push(root)
-    pre = None
-    while not s.empty():
-        cur = s.gettop()
-        if pre == None or pre.left == cur or pre.right == cur:
-            if cur.left != None:
-                s.push(cur.left)
-            elif cur.right != None:
-                s.push(cur.right)
-            else:
-                result.append(s.pop().val)
-        elif pre == cur.left:
-            if cur.right != None:
-                s.push(cur.right)
-            else:
-                result.append(s.pop().val)
-        else:
-            result.append(s.pop().val)
-        pre = cur
-    return result
-print(preorderiter(root1))
-print(inorderiter(root1))
-print(postorder(root1))
-
+inOrderIteration(testRoot3)
+print()
+postOrderIteration(testRoot3)
 

@@ -1,3 +1,5 @@
+import DataStructure1 as DS1
+print()
 class treeNode(object):
     def __init__(self, value = -1, leftChild = None, rightChild = None):
         self.value = value
@@ -236,7 +238,6 @@ print(searchBST(newRoot3, 2))
 newRoot3 = removeBST(newRoot3, 1)
 print(searchBST(newRoot3, 1))
 #------------------------------------------------------------------------------------
-import DataStructure1 as DS1
 def preOrderIteration(root):
     if root == None:
         return
@@ -293,4 +294,5 @@ print()
 inOrderIteration(testRoot3)
 print()
 postOrderIteration(testRoot3)
+print()
 

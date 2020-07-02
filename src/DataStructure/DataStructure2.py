@@ -1,4 +1,5 @@
 import DataStructure1 as DS1
+print()
 
 def selectionSort(array):
     if array == None or len(array) <= 1:

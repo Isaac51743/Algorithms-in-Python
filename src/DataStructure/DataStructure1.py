@@ -29,6 +29,10 @@ class Stack(object):
 class Queue(object):
     def __init__(self):
         self.array = []
+    def isEmpty(self):
+        return len(self.array) == 0
+    def getSize(self):
+        return len(self.array)
     def push(self, element):
         self.array.append(element)
     def pop(self):

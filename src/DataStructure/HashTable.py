@@ -1,142 +1,97 @@
-class heap(object):
-    def __init__(self):
-        self.array = []
-
-    def percolateup(self,index):
-        if index <= 0:
-            return None
-        parent = (index - 1) // 2
-        if self.array[index][0] < self.array[parent][0]:
-            tem = self.array[index]
-            self.array[index] = self.array[parent]
-            self.array[parent] = tem
-            self.percolateup(parent)
-
-    def percolatedown(self, index):
-        left = index * 2 + 1
-        right = left + 1
-        if right <= len(self.array) - 1:
-            if self.array[left][0] < self.array[right][0]:
-                min = left
-            else:
-                min = right
-            if self.array[index][0] > self.array[min][0]:
-                tem = self.array[index]
-                self.array[index] = self.array[min]
-                self.array[min] = tem
-                self.percolatedown(min)
-        elif left <= len(self.array) - 1:
-            if self.array[left][0] < self.array[index][0]:
-                tem = self.array[left]
-                self.array[left] = self.array[index]
-                self.array[index] = tem
-                self.percolatedown(left)
-
-    def insert(self, val):
-        self.array.append(val)
-        self.percolateup(len(self.array) - 1)
-        return self.array
-
-    def update(self, index, val):
-        if val[0] == self.array[index][0]:
-            return self.array
-
-        if val[0] > self.array[index][0]:
-            self.array[index] = val
-            self.percolatedown(index)
-        elif val[0] < self.array[index][0]:
-            self.array[index] = val
-            self.percolateup(index)
-        return self.array
-
-    def pop(self):
-        if len(self.array) == 0:
-            return None
-        if len(self.array) == 1:
-            tem = self.array[0]
-            self.array = []
-            return tem
-        result = self.array[0]
-        self.array[0] = self.array[-1]
-        self.array = self.array[:-1]
-        self.percolatedown(0)
-        return result
-
-    def empty(self):
-        return self.array == []
-
-def kfrequent(st, k):
-    dic = {}
-    st = st.replace(',', '')
-    st = st.replace('.', '')
-    st = st.replace('?', '')
-    words = st.split(' ')
-    for word in words:
-        if word in dic:
-            dic[word] += 1
+import BFS as B
+print('Hash table:')
+def findTopKFrequentWord(text, k):
+    dictionary = {}
+    text = text.replace(',', '')
+    text = text.replace('.', '')
+    text = text.replace('?', '')
+    wordList = text.split(' ')
+    for word in wordList:
+        if word in dictionary:
+            dictionary[word] += 1
         else:
-            dic[word] = 1
-    print(dic)
-    pq = heap()
-    for key in dic:
-        pq.insert([-1 * dic[key], key])
-    for i in range(k):
-        result = pq.pop()
-        result = [-1 * result[0]] + result[1:]
-        print(result)
-def missingnum(array):
-    dic = {}
-    for i in array:
-        dic[i] = 1
-    for i in range(min(array), max(array) + 1):
-        if i not in dic:
-            print(i)
-def missingnum1(array):
-    XOR = 0
-    for item in array:
-        XOR = XOR ^ item
-    for i in range(min(array), max(array) + 1):
-        XOR = XOR ^ i
-    print(XOR)
-def common(a1, a2):
-    if len(a1) == 0 or len(a2) == 0:
-        return None
-    dic = {}
+            dictionary[word] = 1
+    print(dictionary)
+    heap = B.HeapAdv()
+    for word in dictionary:
+        if heap.getSize() < k:
+            heap.insert([dictionary[word], word])
+        else:
+            if dictionary[word] > heap.getTop()[0]:
+                heap.pop()
+                heap.insert([dictionary[word], word])
     result = []
-    if len(a1) < len(a2):
-        for item in a1:
-            dic[item] = 1
-        for item in a2:
-            if item in dic:
-                result.append(item)
+    while not heap.isEmpty():
+        result.append(heap.pop()[1])
+    return result
+
+testText = 'i love you so much, but you do not love me. can you hug me a little bit?'
+print(findTopKFrequentWord(testText, 3))
+
+def findMissingNum1(array):
+    hashset = set()
+    for number in array:
+        hashset.add(number)
+    result = []
+    for number in range(min(array), max(array) + 1):
+        if number not in hashset:
+            result.append(number)
+    return result
+
+def findMissingNum2(array): # assuming only one missing number
+    total = (min(array) + max(array)) * (max(array) - min(array) + 1) //2
+    for number in array:
+        total = total - number
+    return total
+
+def findMissingNum3(array): # assuming only one missing number
+    result = 0
+    for number in array:
+        result = result ^ number
+    for number in range(min(array), max(array) + 1):
+        result = result ^ number
+    return result
+
+testList1 = [3, 2, 7, 4, 10, 6, 9, 8]
+print(findMissingNum3(testList1))
+
+def findCommonNumbersBetween2SortedLists1(array1, array2):
+    if len(array1) == 0 or len(array2) == 0:
+        return None
+    hashset = set()
+    result = set()
+    if len(array1) > len(array2):
+        for number in array2:
+            hashset.add(number)
+        for number in array1:
+            if number in hashset:
+                result.add(number)
     else:
-        for item in a2:
-            dic[item] = 1
-        for item in a1:
-            if item in dic:
-                result.append(item)
+        for number in array1:
+            hashset.add(number)
+        for number in array2:
+            if number in hashset:
+                result.add(number)
     return result
-def common1(a1, a2):
-    if len(a1) == 0 or len(a2) == 0:
+
+def findCommonNumbersBetween2SortedLists2(array1, array2):
+    if len(array1) == 0 or len(array2) == 0:
         return None
-    i = j = 0
-    result = []
-    while i < len(a1) and j < len(a2):
-        if a1[i] == a2[j]:
-            result.append(a1[i])
-            i += 1
-            j += 1
-        elif a1[i] < a2[j]:
-            i += 1
+    result = set()
+    index1 = 0
+    index2 = 0
+    while index1 < len(array1) and index2 < len(array2):
+        if array1[index1] < array2[index2]:
+            index1 += 1
+        elif array1[index1] > array2[index2]:
+            index2 += 1
         else:
-            j += 1
+            result.add(array1[index1])
+            index1 += 1
+            index2 += 1
     return result
-test = 'i love you so much, but you do not love me. can you hug me a little bit?'
-kfrequent(test, 3)
-test1 = [3, 2, 7, 4, 10, 6, 9, 8]
-test2 = [11, 6, 14, 8, 3, 2, 12, 4]
-missingnum1(test1)
-print(common(test1, test2))
-test3 = [1, 3, 5, 7, 8, 12, 24]
-test4 = [1, 3, 6, 7, 10, 12, 14]
-print(common1(test3, test4))
+
+testList2 = [1, 3, 5, 7, 8, 12, 24]
+testList3 = [1, 3, 6, 7, 10, 12, 14]
+print(findCommonNumbersBetween2SortedLists1(testList2, testList3))
+print(findCommonNumbersBetween2SortedLists2(testList2, testList3))

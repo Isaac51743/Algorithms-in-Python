@@ -104,4 +104,5 @@ print(bridge(t))
 # [1, 20, 42, 143, 245, 348]
 print({} == None)
 mySet = {(1, 2)}
-print((1, 2) in mySet)
+a = (1, 2)
+print(a in mySet)

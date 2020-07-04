@@ -74,7 +74,7 @@ permutationOfString2(letterList, set(), [])
 print()
 
 # assuming one node only contribute to one circle
-def circleNumber(edges):
+def findCircleNumber(edges):
     table = {}
     for edge in edges:
         if edge[0] not in table:
@@ -100,5 +100,5 @@ def circleNumber(edges):
         visitedNode.add(node)
     print(circleNum)
 
-e = [('a', 'c'), ('c', 'e'), ('b', 'd'), ('d', 'a'), ('a', 'b'), ('e', 'f'), ('f', 'c'), ('a', 'a')]
-circleNumber(e)
+edges = [('a', 'c'), ('c', 'e'), ('b', 'd'), ('d', 'a'), ('a', 'b'), ('e', 'f'), ('f', 'c'), ('a', 'a')]
+findCircleNumber(edges)

@@ -1,250 +1,282 @@
-def reverse(st):
-    if len(st) == 0:
-        return None
-    stlist = list(st)
-    i = 0
-    j = len(st) - 1
-    while i < j:
-        stlist[i], stlist[j] = stlist[j], stlist[i]
-        i += 1
-        j -= 1
-    return ''.join(stlist)
-def reverse1(st):
-    if len(st) < 2:
-        return st
-    stlist = list(st)
-    middle = reverse1(st[1:-1])
-    # print(middle)
-    return stlist[-1] + middle + stlist[0]
-def reverse_w(st):
-    if len(st) == 0:
-        return st
-    i = 0
-    while 1:
-        while i < len(st) and st[i] == ' ':
-            i += 1
-        j = i
-        if i == len(st):
-            break
-        while j < len(st) and st[j] != ' ':
-            j += 1
-        # reverse each word
-        st = st[:i] + reverse(st[i:j]) + st[j:]
+def reverseRecursion(text, leftIndex, rightIndex):
+    if leftIndex >= rightIndex:
+        return ''.join(text)
+    text[leftIndex], text[rightIndex] = text[rightIndex], text[leftIndex]
+    return reverseRecursion(text, leftIndex + 1, rightIndex - 1)
 
-        i = j
-    # reverse the whole string
-    return reverse(st)
-def newreverse(stlist, left, right):
-    if right - left < 1:
-        return
-    while left < right:
-        stlist[left], stlist[right] = stlist[right], stlist[left]
-        left += 1
-        right -= 1
-# the length of input string is always even
-def shuffle(stlist, left, right):
-    if right - left <= 1:
-        return
-    len = right - left + 1
-    midleft = left + len//4
-    mid = left + len//2
-    midright = left + 3*len//4
-    # print([midleft, mid, midright])
-    newreverse(stlist, midleft, mid - 1)
-    newreverse(stlist, mid, midright - 1)
-    newreverse(stlist, midleft, midright - 1)
-    # print(''.join(stlist))
-    shuffle(stlist, left, left + 2*(midleft - left) - 1)
-    shuffle(stlist, left + 2*(midleft - left), right)
-    return stlist
-def same(s1, s2):
-    if len(s1) == 0 and len(s2) == 0:
-        return True
-    if len(s1) != len(s2):
+def reverseIteration(text):
+    if len(text) == 0:
+        return text
+    text = list(text)
+    leftBound = 0
+    rightBound = len(text) - 1
+    while leftBound < rightBound:
+        text[leftBound], text[rightBound] = text[rightBound], text[leftBound]
+        leftBound += 1
+        rightBound -= 1
+    return ''.join(text)
+
+def reverseWordOrder(text):
+    if len(text) == 0:
+        return text
+    text = list(text)
+    startIndex = 0
+    while True:
+        while startIndex < len(text) and text[startIndex] == ' ':
+            startIndex += 1
+        if startIndex == len(text):
+            break
+        endIndex = startIndex
+        while endIndex < len(text) and text[endIndex] != ' ':
+            endIndex += 1
+        reverseRecursion(text, startIndex, endIndex - 1)
+        startIndex = endIndex
+    return reverseRecursion(text, 0, len(text) - 1)
+
+testText1 = 'zhao yue hang'
+print(reverseRecursion(list(testText1), 0, len(testText1) - 1))
+print(reverseIteration(testText1))
+print(reverseWordOrder(testText1))
+
+def isSame(word1, word2):
+    if len(word1) != len(word2):
         return False
-    for i in range(len(s1)):
-        if s1[i] != s2[i]:
+    for index in range(len(word1)):
+        if word1[index] != word2[index]:
             return False
     return True
-def replacement(stlist, s1, s2):
-    if len(stlist) == 0:
-        return stlist
-    if len(s1) >= len(s2):
-        slow = fast = 0
-        while fast < len(stlist):
-            if same(stlist[fast:fast + len(s1)], s1):
-                fast += len(s1)
-                for i in range(len(s2)):
-                    stlist[slow] = s2[i]
-                    slow += 1
+def replacement(text, segment1, segment2):
+    if len(text) == 0 or len(segment2) == 0:
+        return text
+    text = list(text)
+    segment1 = list(segment1)
+    segment2 = list(segment2)
+    if len(segment1) >= len(segment2):
+        slowPointer = fastPointer = 0
+        while fastPointer < len(text):
+            if fastPointer + len(segment1) - 1 < len(text) and isSame(text[fastPointer:fastPointer + len(segment1)], segment1):
+                for index in range(len(segment2)):
+                    text[slowPointer] = segment2[index]
+                    slowPointer += 1
+                fastPointer += len(segment1)
             else:
-                stlist[fast], stlist[slow] = stlist[slow], stlist[fast]
-                slow += 1
-                fast += 1
-        return stlist[:slow]
+                text[slowPointer], text[fastPointer] = text[fastPointer], text[slowPointer]
+                fastPointer += 1
+                slowPointer += 1
+        return ''.join(text[:slowPointer])
     else:
-        count = 0
-        for i in range(len(stlist) - len(s1)):
-            if same(stlist[i:i + len(s1)], s1):
-                count += 1
-        for i in range(count * (len(s2) - len(s1))):
-            stlist.append(' ')
-        slow = len(stlist) - 1
-        fast = len(stlist) - 1 - count * (len(s2) - len(s1))
-        while fast >= 0:
-            if same(stlist[fast - len(s1) + 1:fast + 1], s1):
-                fast -= len(s1)
-                for i in range(len(s2)):
-                    stlist[slow] = s2[len(s2) - 1 - i]
-                    slow -= 1
+        index = 0
+        occurence = 0
+        while index + len(segment1) - 1 < len(text):
+            if isSame(text[index:index + len(segment1)], segment1):
+                occurence += 1
+            index += 1
+        fastPointer =len(text) - 1
+        for i in range(occurence * (len(segment2) - len(segment1))):
+            text.append(' ')
+        slowPointer = len(text) - 1
+        while fastPointer - len(segment1) + 1 >= 0:
+            if isSame(text[fastPointer - len(segment1) + 1: fastPointer + 1], segment1):
+                for index in range(len(segment2)):
+                    text[slowPointer] = segment2[len(segment2) - index - 1]
+                    slowPointer -= 1
+                fastPointer -= len(segment1)
             else:
-                stlist[fast], stlist[slow] = stlist[slow], stlist[fast]
-                slow -= 1
-                fast -= 1
-        return stlist
+                text[slowPointer], text[fastPointer] = text[fastPointer] ,text[slowPointer]
+                slowPointer -= 1
+                fastPointer -= 1
+        return ''.join(text)
 
-def permutation(stlist, index):
-    if index == len(stlist):
-        print(''.join(stlist))
+testText2 = 'my name is hang, and all my friends like hang. hang is from my father.'
+print(replacement(testText2, 'hang', 'zhaoyuehang'))
+print(replacement(testText2, 'hang', 'ZYH'))
+
+# the length of input text is always even
+def shuffle(text, leftIndex, rightIndex):
+    if rightIndex - leftIndex + 1 < 4:
         return
-    swapped = {}
-    for i in range(index, len(stlist)):
-        if stlist[i] not in swapped:
-            stlist[index], stlist[i] = stlist[i], stlist[index]
-            permutation(stlist, index + 1)
-            stlist[index], stlist[i] = stlist[i], stlist[index]
-            swapped[stlist[i]] = 1
-def encoding(stlist):
-    if len(stlist) <= 1:
-        return ''.join(stlist)
-    # step1
-    slow = fast = 0
-    counter = 0
-    while fast < len(stlist):
-        stlist[slow] = stlist[fast]
-        c = 0
-        while fast < len(stlist) and stlist[fast] == stlist[slow]:
-            fast += 1
-            c += 1
-        print([stlist[slow], c])
-        slow += 1
-        if c > 1:
-            stlist[slow] = str(c)
-            slow += 1
-        else:
-            counter += 1
-    # step2
-    final = slow
-    for i in range(counter):
-        stlist.append(' ')
-    slow = slow + counter - 1
-    fast = final - 1
-    while fast >= 0:
-        # add number
-        if ord(stlist[fast]) < ord('A'):
-            stlist[slow] = stlist[fast]
-            slow -= 1
-            fast -= 1
-        else:
-            stlist[slow] = '1'
-            slow -= 1
-        # add letter
-        stlist[slow] = stlist[fast]
-        fast -= 1
-        slow -= 1
-    return ''.join(stlist[:slow])
-def longestsubst(stlist, k):
-    if len(stlist) <= 1:
-        return len(stlist)
-    table = {}
-    l = 0
-    longest = 0
-    for r in range(len(stlist)):
-        if stlist[r] not in table:
-            table[stlist[r]] = 1
-        elif table[stlist[r]] < k:
-            table[stlist[r]] += 1
-        else:
-            while stlist[l] != stlist[r]:
-                table[stlist[l]] -= 1
-                l += 1
-            l += 1
-        if longest < r - l + 1:
-            longest = r - l + 1
-        # window = stlist[l:r + 1]
-        # print(window)
-    return longest
-def anagram(stlist, subst):
-    # hashmap initializaiton
-    table = {}
-    for i in range(len(subst)):
-        if subst[i] not in table:
-            table[subst[i]] = 1
-        else:
-            table[subst[i]] += 1
-    lettersToMatch = len(table)
-    # window initialization
-    l = 0
-    r = len(subst) - 1
-    for i in range(len(subst)):
-        if stlist[i] in table:
-            table[stlist[i]] -= 1
-            if table[stlist[i]] == 0:
-                lettersToMatch -= 1
-    if lettersToMatch == 0:
-        print(stlist[l:r + 1])
-    # slide window
-    while r < len(stlist) - 1:
-        if stlist[l] in table:
-            if table[stlist[l]] == 0:
-                lettersToMatch += 1
-            table[stlist[l]] += 1
-        l += 1
-        r += 1
-        if stlist[r] in table:
-            table[stlist[r]] -= 1
-            if table[stlist[r]] == 0:
-                lettersToMatch -= 1
-        if lettersToMatch == 0:
-            print(stlist[l:r + 1])
-def onezero(st, k):
-    l = 0
-    count = 0
-    result = ''
-    for r in range(len(st)):
-        if st[r] == '0':
-            if count < k:
-                count += 1
-            else:
-                while st[l] != '0':
-                    l += 1
-                l += 1
-        if r - l + 1 > len(result):
-            result = st[l:r + 1]
-    print(result)
+    length = rightIndex - leftIndex + 1
+    startOfSubarray3 = leftIndex + length // 2
+    startOfSubarray2 = leftIndex + length // 4
+    startOfSubarray4 = startOfSubarray3 + length // 4
+    reverseRecursion(text, startOfSubarray2, startOfSubarray3 - 1)
+    reverseRecursion(text, startOfSubarray3, startOfSubarray4 - 1)
+    reverseRecursion(text, startOfSubarray2, startOfSubarray4 - 1)
+    shorterSubarrayLength = length // 4
+    shuffle(text, leftIndex, leftIndex + 2 * shorterSubarrayLength - 1)
+    shuffle(text, leftIndex + 2 * shorterSubarrayLength, rightIndex)
 
-test1 = 'zhaoyuehang'
-test1n = list(test1)
-print(reverse(test1))
-print(reverse1(test1))
-test2 = 'I love yahoo'
-print(reverse_w(test2))
-test3 = 'abcdefg1234567'
-test3list = list(test3)
-print(''.join(shuffle(test3list, 0, len(test3) - 1)))
-test4 = 'my name is hang, and all my friends like hang. hang is from my father.'
-test4n = list(test4)
-print(''.join(replacement(test4n, list('hang'), list('zhaoyuehang'))))
-test5 = 'bacc'
-test5n = list(test5)
-permutation(test5n, 0)
-test6 = 'aaabbaacdd'
-test6n = list(test6)
-print(encoding(test6n))
-test7 = 'abafgcdefg'
-print(longestsubst(test7, 1))
-test81 = 'aabcbaa'
-test82 = 'aab'
-anagram(test81, test82)
-test9 = '0100101010111010101'
-onezero(test9, 1)
+testText3 = list('abcdefg1234567')
+shuffle(testText3, 0, len(testText3) - 1)
+print(''.join(testText3))
+
+def permutationOfText(text, startIndex):
+    if len(text) == 0:
+        print(''.join(text))
+        return
+    if startIndex == len(text):
+        print(''.join(text), end=' ')
+        return
+    visited = set()
+    for index in range(startIndex, len(text)):
+        if text[index] not in visited:
+            visited.add(text[index])
+            text[startIndex], text[index] = text[index], text[startIndex]
+            permutationOfText(text, startIndex + 1)
+            text[startIndex], text[index] = text[index], text[startIndex]
+
+testText4 = list('bacc')
+permutationOfText(testText4, 0)
+print()
+
+def findLongestSubstringWithKZeros(text, k):
+    if len(text) == 0 or k <= 0:
+        return None
+    leftBound = 0
+    zerosCount = 0
+    finalLeft = finalRight = -1
+    for rightBound in range(len(text)):
+        if text[rightBound] == '0':
+            if zerosCount < k:
+                zerosCount += 1
+            else:
+                while text[leftBound] != '0':
+                    leftBound += 1
+                leftBound += 1
+        if rightBound - leftBound > finalRight - finalLeft:
+            finalLeft = leftBound
+            finalRight = rightBound
+    if zerosCount < k:
+        return None
+    return text[finalLeft:finalRight + 1]
+
+def findLongestSubstringWithUniqueLetter(text):
+    if len(text) == 0:
+        return text
+    hashSet = set()
+    leftBound = 0
+    finalLeft = finalRight = 0
+    for rightBound in range(len(text)):
+        if text[rightBound] not in hashSet:
+            hashSet.add(text[rightBound])
+        else:
+            while text[leftBound] != text[rightBound]:
+                hashSet.remove(text[leftBound])
+                leftBound += 1
+            leftBound += 1
+        if rightBound - leftBound > finalRight - finalLeft:
+            finalLeft = leftBound
+            finalRight = rightBound
+    return text[finalLeft:finalRight + 1]
+
+def findLongestSubstringWithKOccurrence(text, k):
+    if len(text) == 0:
+        return text
+    if k <= 0:
+        return None
+    leftBound = 0
+    hashTable = {}
+    finalLeft = finalRight = 0
+    for rightBound in range(len(text)):
+        if text[rightBound] not in hashTable:
+            hashTable[text[rightBound]] = 1
+        else:
+            if hashTable[text[rightBound]] < k:
+                hashTable[text[rightBound]] += 1
+            else:
+                while text[leftBound] != text[rightBound]:
+                    hashTable[text[leftBound]] -= 1
+                    leftBound += 1
+                leftBound += 1
+        if rightBound - leftBound > finalRight - finalLeft:
+            finalLeft = leftBound
+            finalRight = rightBound
+    return text[finalLeft:finalRight + 1]
+
+testText5 = '0100101010111010101'
+print(findLongestSubstringWithKZeros(testText5, 3))
+testText6 = 'abcdebfghijklmn'
+print(findLongestSubstringWithUniqueLetter(testText6))
+print(findLongestSubstringWithKOccurrence(testText5, 2))
+
+def isNumber(letter):
+    if ord(letter) >= ord('0') and ord(letter) <= ord('9'):
+        return True
+    return False
+def encodeString(text):
+    if len(text) == 0:
+        return text
+    text = list(text)
+    slowPointer = fastPointer = 0
+    numberOfSingleLetter = 0
+    while fastPointer < len(text):
+        text[slowPointer] = text[fastPointer]
+        slowPointer += 1
+        numOfReplica = 0
+        while fastPointer < len(text) and text[fastPointer] == text[slowPointer - 1]:
+            numOfReplica += 1
+            fastPointer += 1
+        if numOfReplica > 1:
+            text[slowPointer] = str(numOfReplica)
+            slowPointer += 1
+        else:
+            numberOfSingleLetter += 1
+    fastPointer = slowPointer - 1
+    for i in range(numberOfSingleLetter):
+        text.append(' ')
+    slowPointer = len(text) - 1
+    while fastPointer >= 0:
+        if isNumber(text[fastPointer]):
+            text[slowPointer] = text[fastPointer]
+            fastPointer -= 1
+            slowPointer -= 1
+        else:
+            text[slowPointer] = '1'
+            slowPointer -= 1
+        text[slowPointer] = text[fastPointer]
+        slowPointer -= 1
+        fastPointer -= 1
+    return ''.join(text[slowPointer + 1 :])
+
+testText7 = 'aaabbaacdd'
+print(encodeString(testText7))
+
+def findAnagram(text, segment):
+    if len(text) == 0 or len(segment) == 0 or len(segment) > len(text):
+        return
+    hashTable = {}
+    for index in range(len(segment)):
+        if segment[index] not in hashTable:
+            hashTable[segment[index]] = 1
+        else:
+            hashTable[segment[index]] += 1
+    leftBound = 0
+    rightBound = len(segment) - 1
+    lettersLeft = len(hashTable)
+    for index in range(len(segment)):
+        if text[index] in hashTable:
+            hashTable[text[index]] -= 1
+            if hashTable[text[index]] == 0:
+                lettersLeft -= 1
+    if lettersLeft == 0:
+        print(text[leftBound:rightBound + 1])
+    leftBound += 1
+    rightBound += 1
+    while rightBound < len(text):
+        if text[leftBound - 1] in hashTable:
+            if hashTable[text[leftBound - 1]] == 0:
+                lettersLeft += 1
+            hashTable[text[leftBound - 1]] += 1
+        if text[rightBound] in hashTable:
+            hashTable[text[rightBound]] -= 1
+            if hashTable[text[rightBound]] == 0:
+                lettersLeft -= 1
+        if lettersLeft == 0:
+            print(text[leftBound:rightBound + 1])
+        leftBound += 1
+        rightBound += 1
+
+testText8 = 'aabcbaa'
+segment = 'aab'
+findAnagram(testText8, segment)
+

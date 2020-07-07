@@ -37,15 +37,15 @@ def reversiveMergeSort(array, leftIndex, rightIndex, helper):
     arrayLength = rightIndex - leftIndex + 1
     if arrayLength < 4:
         return
-    startOfSubarray3 = leftIndex + arrayLength//2
-    shorterSubarrayLength = (startOfSubarray3 - leftIndex)//2
+    startOfSubarray3 = leftIndex + arrayLength // 2
+    shorterSubarrayLength = arrayLength // 4
     startOfSubarray2 = leftIndex + shorterSubarrayLength
     startOfSubarray4 = startOfSubarray3 + shorterSubarrayLength
     # swap subarray2 and subarray3
     helper[startOfSubarray2:startOfSubarray4] = array[startOfSubarray3:startOfSubarray4] + array[startOfSubarray2:startOfSubarray3]
     array[startOfSubarray2: startOfSubarray4] = helper[startOfSubarray2:startOfSubarray4]
-    reversiveMergeSort(array, leftIndex, startOfSubarray3 - 1, helper)
-    reversiveMergeSort(array, startOfSubarray3, rightIndex, helper)
+    reversiveMergeSort(array, leftIndex, leftIndex + 2 * shorterSubarrayLength - 1, helper)
+    reversiveMergeSort(array, leftIndex + 2 * shorterSubarrayLength, rightIndex, helper)
 
 original1 = [1, 2, 4, 5, 3, 5, 7, 2, 0, 9, 6]
 helper1 = [0] * len(original1)

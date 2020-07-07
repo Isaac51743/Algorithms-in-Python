@@ -87,6 +87,7 @@ class test():
         # self.class_variable = 'wawa'
 a = test()
 print(a.class_variable)
+
 def bridge(time):
     M = [time[0], time[1], time[0] + time[1] + time[2]]
     for i in range(3, len(time)):
@@ -98,6 +99,7 @@ def bridge(time):
             M.append(temtime2)
     print(M)
     return M[-1]
+
 t = [1, 2, 5, 10]
 print(bridge(t))
 # [1, 20, 42, 161, 184, 304]

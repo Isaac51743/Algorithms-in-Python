@@ -1,70 +1,75 @@
-def setKto(num, k, var):
-    print(bin(num))
-    tem = 1 << (k - 1)
-    if var == 1:
-        result = tem | num
-    elif var == 0:
-        tem1 = ~tem
-        result = tem1 & num
+def setKthBitTo(number, k, oneOrZero):
+    print(bin(number), end=' ')
+    shiftedOne = 1 << (k - 1)
+    if oneOrZero:
+        number = number | shiftedOne
     else:
-        return None
-    return result
-def power2(num):
-    return (num - 1) & num == 0 and num >= 1
+        shiftedZero = ~shiftedOne
+        number = number & shiftedZero
+    print(bin(number), end=' ')
+    return number
+
+testNumber = 1
+print(setKthBitTo(testNumber, 3, 1))
+
+def isPowerTo2(number):
+    return number & (number - 1) == 0 and number > 0
+
+print(isPowerTo2(16))
+
 # num1 and num2 are positive
-def different(num1, num2):
-    tem = num1 ^ num2
-    i = 0
+def numberOfDifferentBits(number1, number2):
+    XOR = number1 ^ number2
     count = 0
-    while tem >> i != 0:
-        if (tem >> i) & 1 == 1:
+    while XOR > 0:
+        XOR = XOR >> 1
+        if XOR & 1 == 1:
             count += 1
-        i += 1
     return count
-def letterunique(word):
-    dic = [0] * 8
+
+print(numberOfDifferentBits(1, 7))
+
+# assuming 32 bit machine
+def isLetterunique(word):
+    positions = [0] * 8
     for letter in word:
-        line = ord(letter) // 32
-        num = ord(letter) % 32
-        shift = 32 - 1 - num
-        if (dic[line] >> shift) & 1 == 0:
-            dic[line] = dic[line] | (1 << shift)
+        position = ord(letter) // 32
+        shift = 32 - 1 - ord(letter) % 32
+        if (positions[position] >> shift) & 1 == 0:
+            positions[position] = positions[position] | (1 << shift)
         else:
             return False
     return True
-def reverse(num):
-    print(bin(num))
-    length = len(bin(num)) - 2
-    for i in range(length):
-        num ^= (1 << i)
-        # print(bin(num))
-    return bin(num)
-def reversest(st):
-    stlist = list(st)
-    i = 0
-    j  =len(st) - 1
-    while i < j:
-        stlist[i], stlist[j] = stlist[j], stlist[i]
-        i += 1
-        j -= 1
-    return ''.join(stlist)
-def hex(num):
-    result = ''
-    while num > 0:
-        cur = num % 16
-        if cur > 9:
-            curst = chr(cur - 10 + ord('A'))
+
+print(isLetterunique('.sfaeg'))
+
+def reverseEveryBit(number):
+    print(bin(number), end=' ')
+    length = len(bin(number)) - 2
+    for shift in range(length):
+        number = number ^ (1 << shift)
+    return number
+
+print(reverseEveryBit(5))
+
+def hexadecimalRepresentation(number):
+    result = []
+    while number > 0:
+        curPosition = number % 16
+        number = number // 16
+        if curPosition > 9:
+            result.append(chr(curPosition - 10 + ord('A')))
         else:
-            curst = str(cur)
-        result += curst
-        num //= 16
-    result += 'x0'
-    print(result)
-    return reversest(result)
-test1 = 1
-print(setKto(test1, 3, 1))
-print(power2(8))
-print(different(1, 5))
-print(letterunique('.sfaeg'))
-print(reverse(5))
-print(hex(10))
+            result.append(str(curPosition))
+    result.append('x')
+    result.append('0')
+    # reverse
+    leftIndex = 0
+    rightIndex = len(result) - 1
+    while leftIndex < rightIndex:
+        result[leftIndex], result[rightIndex] = result[rightIndex], result[leftIndex]
+        leftIndex += 1
+        rightIndex -= 1
+    return ''.join(result)
+
+print(hexadecimalRepresentation(100))

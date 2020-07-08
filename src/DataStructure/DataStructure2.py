@@ -36,7 +36,7 @@ def selectionSort(array):
 testArray1 = [1, 5, 3, 5, 25, 2, 34, 9, 10]
 print(selectionSort(testArray1))
 # --------------------------------------------------------------------------------
-class Deque(object):
+class DequeWithThreeStack(object):
     def __init__(self):
         self.stackLeft = DS1.Stack()
         self.stackRight = DS1.Stack()
@@ -72,7 +72,7 @@ class Deque(object):
                     self.stackLeft.push(self.transfer.pop())
         return self.stackRight.pop()
 
-deque = Deque()
+deque = DequeWithThreeStack()
 for element in testArray1:
     deque.pushLeft(element)
 print(deque.popRight())

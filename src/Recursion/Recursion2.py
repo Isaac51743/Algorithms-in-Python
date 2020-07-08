@@ -1,251 +1,116 @@
-def power2(a, b):
-    if a == 0 and b <= 0:
-        return None
-    elif a != 0 and b < 0:
-        return 1 / power1(a, -b)
-    else:
-        return power1(a, b)
-# assuming b > 0 if a == 0, b >= 0 if a != 0
-def power1(a, b):
-    if b == 0:
-        return 1
-    elif b == 1:
-        return a
-    tem = power1(a, b//2)
-    if b % 2 == 0:
-        return tem * tem
-    else:
-        return tem * tem * a
-print(power2(0, -1))
-
-def mergesort(array):
-    if len(array) <= 1:
-        return array
-    mid = len(array)//2
-    leftpart = mergesort(array[:mid])
-    rightpart = mergesort(array[mid:])
-    result = merge(leftpart, rightpart)
-    return result
-
-# leftarray and rightarray will not be None at the same time
-def merge(left, right):
-    i = j = 0
-    result = []
-    while len(result) < len(left) + len(right):
-        if i < len(left) and j < len(right):
-            if left[i] < right[j]:
-                result.append(left[i])
-                i += 1
-            else:
-                result.append(right[j])
-                j += 1
-        elif i == len(left):
-            result.extend(right[j:])
-        elif j == len(right):
-            result.extend(left[i:])
-    return result
-
-# row for current row, col record result
-def nq(row, col, n):
-    # print(col)
-    if row >= n:
-        for i, j in enumerate(col):
-            print([i, j], end=' ')
-        print()
-        return
-    for j in range(n):
-        legal = True
-        if j not in col:
-            for idx in range(len(col)):
-                # print([r, c])
-                if row - idx == abs(j - col[idx]):
-                    legal = False
-                    break
-            if legal:
-                nq(row + 1, col + [j], n)
-
-def spiralprint(array2D, offset, count):
-    if offset == (len(array2D) - 1)//2 + 1:
-        return array2D
-    size = len(array2D) - 2 * offset
-    if size == 1:
-        array2D[offset][offset] = count
-    else:
-        for i in range(size - 1):
-            r = offset
-            c = offset + i
-            array2D[r][c] = count
-            count += 1
-        for i in range(size - 1):
-            r = offset + i
-            c = offset + size - 1
-            array2D[r][c] = count
-            count += 1
-        for i in range(size - 1):
-            r = len(array2D) - 1 - offset
-            c = len(array2D) - 1 - offset - i
-            array2D[r][c] = count
-            count += 1
-        for i in range(size - 1):
-            r = len(array2D) - 1 - offset - i
-            c = offset
-            array2D[r][c] = count
-            count += 1
-    return spiralprint(array2D, offset + 1, count)
-
-def reversepair(head):
+import DataStructure2 as DS2
+import Tree as T
+print('Recursion2:')
+# -----------------------------------------------------------------------------------
+def reverseEachPairInLinkedList(head):
     if head == None or head.next == None:
         return head
-    newhead = head.next
-    head.next = reversepair(newhead.next)
-    newhead.next = head
-    return newhead
-# not in-place, should reversestr(stlist, left, right)
-def reversestr(st):
-    if len(st) <= 1:
-        return st
-    result = st[-1] + reversestr(st[1:-1]) + st[0]
-    return result
+    newHead = head.next
+    head.next = reverseEachPairInLinkedList(head.next.next)
+    newHead.next = head
+    return newHead
 
-# no extra space
-def reversestr1(stlist, left, right):
-    if left >= right:
-        return
-    stlist[left], stlist[right] = stlist[right], stlist[left]
-    reversestr1(stlist, left + 1, right - 1)
-
-def isdigit(st):
-    if ord(st) >= ord('0') and ord(st) <= ord('9'):
+testHead = DS2.ListNode(6)
+curNode = testHead
+for i in range(5):
+    curNode.next = DS2.ListNode(5 - i)
+    curNode = curNode.next
+DS2.linkedListPrint(testHead)
+DS2.linkedListPrint(reverseEachPairInLinkedList(testHead))
+# -----------------------------------------------------------------------------------
+def isDigit(letter):
+    if ord(letter) >= ord('0') and ord(letter) <= ord('9'):
         return True
     return False
-def abbrevmatch(st, abbre, start1, start2):
-    if start1 == len(st) and start2 == len(abbre):
+def abbrevMatch(text, abbrev, indexOfText, indexOfAbbrev):
+    if indexOfText == len(text) and indexOfAbbrev == len(abbrev):
         return True
-    elif start1 == len(st) or start2 == len(abbre):
+    elif indexOfText == len(text) or indexOfAbbrev == len(abbrev):
         return False
-
-    if isdigit(abbre[start2]):
-        idx = start2             # idx for abbre
-        num = 0
-        # read the num
-        while idx < len(abbre) and isdigit(abbre[idx]):
-            num = num * 10 + ord(abbre[idx]) - ord('0')
-            idx += 1
-        if num > len(st) - start1:
-            return False
+    if isDigit(abbrev[indexOfAbbrev]):
+        number = 0
+        while isDigit(abbrev[indexOfAbbrev]):
+            number = number * 10 + ord(abbrev[indexOfAbbrev]) - ord('0')
+            indexOfAbbrev += 1
+        if indexOfText + number - 1 < len(text):
+            return abbrevMatch(text, abbrev, indexOfText + number, indexOfAbbrev)
         else:
-            return abbrevmatch(st, abbre, start1 + num, idx)
+            return False
     else:
-        if st[start1] == abbre[start2]:
-            return abbrevmatch(st, abbre, start1 + 1, start2 + 1)
+        if abbrev[indexOfAbbrev] == text[indexOfText]:
+            return abbrevMatch(text, abbrev, indexOfText + 1, indexOfAbbrev + 1)
         else:
             return False
 
-def nodesnum(node):
-    if node == None:
-        return 0
-    leftnum = nodesnum(node.left)
-    rightnum = nodesnum(node.right)
-    node.leftchilds = leftnum
-    return leftnum + rightnum + 1
+testText = 'this code is soooooo perfect like an art.'
+abbrev = 't11 s6 perfect l10.'
+print(abbrevMatch(testText, abbrev, 0, 0))
+# -----------------------------------------------------------------------------------
+# edge length must > 3
+def setNQueenInAChess(curRow, columnsInVisitedRows, edgeLength):
+    if curRow == edgeLength:
+        for row, column in enumerate(columnsInVisitedRows):
+            print((row, column), end=' ')
+        print()
+        return
+    for column in range(edgeLength):
+        positionLegal = True
+        for row in range(len(columnsInVisitedRows)):
+            if column == columnsInVisitedRows[row] or curRow - row == abs(columnsInVisitedRows[row] - column):
+                positionLegal = False
+                break
+        if positionLegal:
+            columnsInVisitedRows.append(column)
+            setNQueenInAChess(curRow + 1, columnsInVisitedRows, edgeLength)
+            columnsInVisitedRows.pop()
 
-def differencemax(node):
-    if node == None:
-        return 0
-    leftnum = differencemax(node.left)
-    rightnum = differencemax(node.right)
-    global maxdif
-    global targetnode
-    if abs(leftnum - rightnum) > maxdif:
-        targetnode = node
-        maxdif = abs(leftnum - rightnum)
-    return leftnum + rightnum + 1
-
-def LCA1(node, target1, target2):
-    if node == None:
+setNQueenInAChess(0, [], 5)
+# -----------------------------------------------------------------------------------
+def spiralFillASquareMatrix(matrix, numOfVisitedLayers, count):
+    if len(matrix) == 0:
         return None
-    elif node.value == target1 or node.value == target2:
-        return node
-    # step1 get value from child
-    findinleft = LCA1(node.left, target1, target2)
-    findinright = LCA1(node.right, target1, target2)
-    # step2 + 3 operation in current layer and report
-    if findinleft != None and findinright != None:
-        return node
-    elif findinleft != None:
-        return findinleft
-    elif findinright != None:
-        return findinright
+    if numOfVisitedLayers >= (len(matrix) + 1) // 2:
+        return matrix
+    edgeLength = len(matrix) - 2 * numOfVisitedLayers
+    print(edgeLength, numOfVisitedLayers)
+    if edgeLength == 1:
+        matrix[numOfVisitedLayers][numOfVisitedLayers] = count
+        count += 1
     else:
-        return None
+        for shift in range(edgeLength - 1):
+            matrix[numOfVisitedLayers][numOfVisitedLayers + shift] = count
+            count += 1
+        for shift in range(edgeLength - 1):
+            matrix[numOfVisitedLayers + shift][numOfVisitedLayers + edgeLength - 1] = count
+            count += 1
+        for shift in range(edgeLength - 1):
+            matrix[numOfVisitedLayers + edgeLength - 1][numOfVisitedLayers + edgeLength - 1 - shift] = count
+            count += 1
+        for shift in range(edgeLength - 1):
+            matrix[numOfVisitedLayers + edgeLength - 1 - shift][numOfVisitedLayers] = count
+            count += 1
+    return spiralFillASquareMatrix(matrix, numOfVisitedLayers + 1, count)
 
-def LCA2(node, path, target):
-    if node == None:
-        return None
-    if node.value == target:
-        return path
-    leftpath = LCA2(node.left, path + [node.left], target)
-    rightpath = LCA2(node.right, path + [node.right], target)
-    if leftpath != None:
-        return leftpath
-    elif rightpath != None:
-        return rightpath
-    else:
-        return None
+edgeLength = 5
+testMatrix = [[0 for _ in range(edgeLength)] for _ in range(edgeLength)]
+filledMatrix = spiralFillASquareMatrix(testMatrix, 0, 0)
+for row in range(len(filledMatrix)):
+    print(filledMatrix[row])
+# -----------------------------------------------------------------------------------
+def countNumberOfNodesInLeftSubtree(root):
+    if root == None:
+        return 0
+    numOfNodesOnLeft = countNumberOfNodesInLeftSubtree(root.leftChild)
+    numOfNodesOnRight = countNumberOfNodesInLeftSubtree(root.rightChild)
+    root.numberLeftChilds = numOfNodesOnLeft
+    return numOfNodesOnLeft + numOfNodesOnRight + 1
 
-# ---------------------------------------------------------------------------
-test = [1, 4, 2, 6, 2, 4, 1, 5, 0]
-print(mergesort(test))
-nq(0, [], 4)
-# ---------------------------------------------------------------------------
-n = 6
-test1 = [[0] * n for _ in range(n)]
-a = spiralprint(test1, 0, 1)
-for r in range(len(a)):
-    print(a[r])
-# ---------------------------------------------------------------------------
-class node():
-    def __init__(self, n):
-        self.next = None
-        self.num = n
-class linkedlist(object):
-    def __init__(self):
-        self.head = None
-
-    def add(self, val):
-        temnode = node(val)
-        temnode.next = self.head
-        self.head = temnode
-
-    def show(self):
-        cur = self.head
-        while cur != None:
-            print(cur.num, end=' ')
-            cur = cur.next
-        print()  # used to change the line
-L = linkedlist()
-for i in range(5):
-    l=L.add(5 - i)
-L.show()
-L.head = reversepair(L.head)
-L.show()
-# ---------------------------------------------------------------------------
-testst = 'abcdef'
-stlist = list(testst)
-print(reversestr(testst))
-reversestr1(stlist, 0, len(stlist) - 1)
-print(''.join(stlist))
-# ---------------------------------------------------------------------------
-st = 'zhaoyuehang'
-abbre = 'z5e2ng'
-print(abbrevmatch(st, abbre, 0, 0))
-# ---------------------------------------------------------------------------
-class treenode():
+class treeNodeAdv(T.TreeNode):
     def __init__(self, val):
-        self.value = val
-        self.left = None
-        self.right = None
-        self.leftchilds = 0
+        T.TreeNode.__init__(self, val)
+        self.numberLeftChilds = 0
+
+
    #            0
    #          /    \
    #        1        2
@@ -253,34 +118,75 @@ class treenode():
    #    3         4     5
    #  /   \
    # 6     7
-nodelist = []
+treeNodeList = []
 for i in range(8):
-    nodelist.append(treenode(i))
-nodelist[0].left = nodelist[1]
-nodelist[0].right = nodelist[2]
-nodelist[1].left = nodelist[3]
-nodelist[2].left = nodelist[4]
-nodelist[2].right = nodelist[5]
-nodelist[3].left = nodelist[6]
-nodelist[3].right = nodelist[7]
-nodesnum(nodelist[0])
-for node in nodelist:
-    print(node.leftchilds, end=' ')
+    treeNodeList.append(treeNodeAdv(i))
+treeNodeList[0].leftChild = treeNodeList[1]
+treeNodeList[0].rightChild = treeNodeList[2]
+treeNodeList[1].leftChild = treeNodeList[3]
+treeNodeList[2].leftChild = treeNodeList[4]
+treeNodeList[2].rightChild = treeNodeList[5]
+treeNodeList[3].leftChild = treeNodeList[6]
+treeNodeList[3].rightChild = treeNodeList[7]
+countNumberOfNodesInLeftSubtree(treeNodeList[0])
+for treeNode in treeNodeList:
+    print(treeNode.numberLeftChilds, end=' ')
 print()
-# ---------------------------------------------------------------------------
-maxdif = 0
-targetnode = None
-differencemax(nodelist[0])
-print([targetnode.value, maxdif])
-# ---------------------------------------------------------------------------
-print(LCA1(nodelist[0], 3, 4).value)
-# ---------------------------------------------------------------------------
-path1 = LCA2(nodelist[0], [nodelist[0]], 2)
-path2 = LCA2(nodelist[0], [nodelist[0]], 5)
-i = 0
-while i < len(path1) and i < len(path2):
-    if path1[i].value != path2[i].value:
+# -----------------------------------------------------------------------------------
+maximumDifferenceBetweenLeftAndRightSubtree = 0
+treeNodeWithMaxDifference = None
+def findMaxDifferenceBetweenLeftAndRightSubtree(root):
+    if root == None:
+        return 0
+    numOfNodesOnLeft = findMaxDifferenceBetweenLeftAndRightSubtree(root.leftChild)
+    numOfNodesOnRight = findMaxDifferenceBetweenLeftAndRightSubtree(root.rightChild)
+    global maximumDifferenceBetweenLeftAndRightSubtree, treeNodeWithMaxDifference
+    if abs(numOfNodesOnRight - numOfNodesOnLeft) > maximumDifferenceBetweenLeftAndRightSubtree:
+        maximumDifferenceBetweenLeftAndRightSubtree = abs(numOfNodesOnRight - numOfNodesOnLeft)
+        treeNodeWithMaxDifference = root
+    return numOfNodesOnLeft + numOfNodesOnRight + 1
+
+findMaxDifferenceBetweenLeftAndRightSubtree(treeNodeList[0])
+print(treeNodeWithMaxDifference.value, maximumDifferenceBetweenLeftAndRightSubtree)
+# -----------------------------------------------------------------------------------
+def findLowestCommonAncester1(root, targetNode1, targetNode2):
+    if root == None or root == targetNode1 or root == targetNode2:
+        return root
+    findInLeft = findLowestCommonAncester1(root.leftChild, targetNode1, targetNode2)
+    findInRight = findLowestCommonAncester1(root.rightChild, targetNode1, targetNode2)
+    if findInLeft == None and findInRight == None:
+        return None
+    elif findInRight == None and findInLeft != None:
+        return findInLeft
+    elif findInLeft == None and findInRight != None:
+        return findInRight
+    else:
+        return root
+
+def findLowestCommonAncester2(root, targetNode, path):
+    if root == None:
+        return None
+    if root == targetNode:
+        path.append(root)
+        return path
+    path.append(root)
+    leftPath = findLowestCommonAncester2(root.leftChild, targetNode, path)
+    if leftPath != None:
+        return leftPath
+    rightPath = findLowestCommonAncester2(root.rightChild, targetNode, path)
+    if rightPath != None:
+        return rightPath
+    path.pop()
+    return None
+
+print(findLowestCommonAncester1(treeNodeList[0], treeNodeAdv(10), treeNodeList[5]).value)
+
+path1 = findLowestCommonAncester2(treeNodeList[0], treeNodeList[5], [])
+path2 = findLowestCommonAncester2(treeNodeList[0], treeNodeList[4], [])
+for index in range(len(path1)):
+    if path1[index] != path2[index]:
         break
-    i += 1
-result = path1[i - 1]
-print(result.value)
+    index += 1
+print(path1[index - 1].value)
+
+

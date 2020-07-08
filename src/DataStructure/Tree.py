@@ -1,6 +1,6 @@
 import DataStructure1 as DS1
 print()
-class treeNode(object):
+class TreeNode(object):
     def __init__(self, value = -1, leftChild = None, rightChild = None):
         self.value = value
         self.leftChild = leftChild
@@ -10,15 +10,15 @@ class treeNode(object):
     def addRight(self, node):
         self.rightChild = node
 
-testRoot1 = treeNode(1)
-testRoot1.addLeft(treeNode(2))
-testRoot1.addRight(treeNode(3))
-testRoot2 = treeNode(1)
-testRoot2.addLeft(treeNode(3))
-testRoot2.addRight(treeNode(2))
-testRoot3 = treeNode(10)
-testRoot3.addLeft(treeNode(3))
-testRoot3.addRight(treeNode(12))
+testRoot1 = TreeNode(1)
+testRoot1.addLeft(TreeNode(2))
+testRoot1.addRight(TreeNode(3))
+testRoot2 = TreeNode(1)
+testRoot2.addLeft(TreeNode(3))
+testRoot2.addRight(TreeNode(2))
+testRoot3 = TreeNode(10)
+testRoot3.addLeft(TreeNode(3))
+testRoot3.addRight(TreeNode(12))
 # testRoot1:
 #                  1
 #                /  \
@@ -137,7 +137,7 @@ def searchBST(root, target):
 
 def insertBSTRecursion1(root, target):
     if root == None:
-        return treeNode(target)
+        return TreeNode(target)
     if root.value > target:
         root.leftChild = insertBSTRecursion1(root.leftChild, target)
     elif root.value < target:
@@ -146,7 +146,7 @@ def insertBSTRecursion1(root, target):
 
 def insertBSTIteration1(root, target):
     if root == None:
-        return treeNode(target)
+        return TreeNode(target)
     preNode = None
     curNode = root
     while curNode != None:
@@ -158,14 +158,14 @@ def insertBSTIteration1(root, target):
         else:
             return root
     if preNode.value > target:
-        preNode.leftChild = treeNode(target)
+        preNode.leftChild = TreeNode(target)
     elif preNode.value < target:
-        preNode.rightChild = treeNode(target)
+        preNode.rightChild = TreeNode(target)
     return root
 
 def insertBSTRecursion2(root, target):
     if root == None:
-        return treeNode(target)
+        return TreeNode(target)
     helper(root, target)
     return root
 def helper(root, target):
@@ -173,29 +173,29 @@ def helper(root, target):
         if root.leftChild != None:
             helper(root.leftChild, target)
         else:
-            root.leftChild = treeNode(target)
+            root.leftChild = TreeNode(target)
     elif root.value < target:
         if root.rightChild != None:
             helper(root.rightChild, target)
         else:
-            root.rightChild = treeNode(target)
+            root.rightChild = TreeNode(target)
 
 def insertBSTIteration2(root, target):
     if root == None:
-        return treeNode(target)
+        return TreeNode(target)
     curNode = root
     while curNode.value != target:
         if curNode.value < target:
             if curNode.rightChild != None:
                 curNode = curNode.rightChild
             else:
-                curNode.rightChild = treeNode(target)
+                curNode.rightChild = TreeNode(target)
                 break
         elif curNode.value > target:
             if curNode.leftChild != None:
                 curNode = curNode.leftChild
             else:
-                curNode.leftChild = treeNode(target)
+                curNode.leftChild = TreeNode(target)
                 break
     return root
 def removeBST(root, target):

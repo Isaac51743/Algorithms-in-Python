@@ -113,16 +113,16 @@ def largestSumOfSubarray(array):
         return 0
     result = [array[0]]
     globalMaxSum = array[0]
-    finalLeftIndex = finalRightIndex = temperaryLeftIndex = 0
+    finalLeftIndex = finalRightIndex = temporaryLeftIndex = 0
     for index in range(1, len(array)):
         if result[-1] > 0:
             result.append(result[index - 1] + array[index])
         else:
             result.append(array[index])
-            temperaryLeftIndex = index
+            temporaryLeftIndex = index
         if globalMaxSum < result[-1]:
             globalMaxSum = result[-1]
-            finalLeftIndex = temperaryLeftIndex
+            finalLeftIndex = temporaryLeftIndex
             finalRightIndex = index
     return (globalMaxSum, (finalLeftIndex, finalRightIndex))
 

@@ -1,66 +1,80 @@
-def larsum(array):
-    if len(array) == 0:
-        return None
-    M = [array[0]]
-    sum = array[0]
-    finalstart = finalend = start = 0
-    for i in range(1, len(array)):
-        if M[-1] > 0:
-            M.append(M[-1] + array[i])
+def findLongestContiguous1(zeroOneArray):
+    if len(zeroOneArray) == 0:
+        return 0
+    result = [zeroOneArray[0]]
+    finalLeft = finalRight = 0
+    temporaryLeft = 0 if zeroOneArray[0] == 1 else 1
+    longestLength = zeroOneArray[0]
+    for index in range(1, len(zeroOneArray)):
+        if zeroOneArray[index] == 1:
+            result.append(result[-1] + 1)
         else:
-            M.append(array[i])
-            start = i
-        if M[-1] > sum:
-            finalstart = start
-            finalend = i
-            sum = M[-1]
-    print(array[finalstart:finalend + 1])
-    return M[-1]
-def rain(array):
+            result.append(0)
+            temporaryLeft = index + 1
+        if result[-1] > longestLength:
+            longestLength = result[-1]
+            finalLeft = temporaryLeft
+            finalRight = index
+    return (longestLength, finalLeft, finalRight)
+
+testArray1 = [1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0 ,0, 0]
+print(findLongestContiguous1(testArray1))
+
+def maxStorageOfWater(array):
     if len(array) <= 1:
         return 0
+    # find vertex
     vertex = []
-    i = 0
-    while 1:
+    index = 0
+    while True:
         # up
-        while i < len(array) - 1 and array[i + 1] > array[i]:
-            i += 1
-        vertex.append(i)
-        if i == len(array) - 1:
+        while index < len(array) - 1 and array[index] <= array[index + 1]:
+            index += 1
+        vertex.append(index)
+        if index == len(array) - 1:
             break
         # down
-        while i < len(array) - 1 and array[i + 1] < array[i]:
-            i += 1
-        if i == len(array) - 1:
+        while index < len(array) - 1 and array[index] > array[index + 1]:
+            index += 1
+        if index == len(array) - 1:
             break
     if len(vertex) <= 1:
         return 0
-    sum = 0
-    for i in range(len(vertex) - 1):
-        # vertex[i] to vertex[i + 1]
-        for j in range(vertex[i] + 1, vertex[i + 1]):
-            if array[j] < min(array[vertex[i]], array[vertex[i + 1]]):
-                sum += min(array[vertex[i]], array[vertex[i + 1]]) - array[j]
-                # print(min(array[vertex[i]], array[vertex[i + 1]]) - array[j], end=' ')
-        # print()
-    return sum
-def conti1(array):
-    if len(array) == 0:
-        return 0
-    longest = array[0]
-    finalleft = finalright = start = 0
-    M = []
-    for i in range(1, len(array)):
-        if array[i] == 1:
-            M.append(M[-1] + 1)
-        else:
-            M.append(0)
-            start = i + 1
-        if M[-1] > longest:
-            longest = M[-1]
-            finalright = i
-            finalleft = start
-    return [longest, finalleft, finalright]
+    print(vertex)
+    # find vertex in vertex
+    vertexOfVertex = []
+    index = 0
+    while True:
+        while index < len(vertex) - 1 and array[index] <= array[index + 1]:
+            index += 1
+        vertexOfVertex.append(index)
+        if index == len(vertex) - 1:
+            break
+        while index < len(vertex) - 1 and array[index] > array[index + 1]:
+            index += 1
+        if index == len(vertex) - 1:
+            break
+    print(vertexOfVertex)
+    if len(vertexOfVertex) > 1:
+        newVertex = []
+        for index in range(vertexOfVertex[0]):
+            newVertex.append(vertex[index])
+        for index in vertexOfVertex:
+            newVertex.append(vertex[index])
+        for index in range(vertexOfVertex[-1] + 1, len(vertex)):
+            newVertex.append(vertex[index])
+    else:
+        newVertex = vertex
+    storage = 0
+    for leftBound in range(len(newVertex) - 1):
+        for index in range(newVertex[leftBound] + 1, newVertex[leftBound + 1]):
+            if array[index] < min(array[newVertex[leftBound]], array[newVertex[leftBound + 1]]):
+                storage += min(array[newVertex[leftBound]], array[newVertex[leftBound + 1]]) - array[index]
+    return storage
+
+fence1 = [5, -1, 2, -1, 5, 5]
+print(maxStorageOfWater(fence1))
+
 def larcross(array):
     if len(array) == 0:
         return 0
@@ -189,11 +203,8 @@ def sumofsubmatrix(matri):
     return M
 
 
-test = [1, -2, 3, 1, 4, 5, -12, 40]
-print(larsum(test))
-print(rain(test))
-test1 = [1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0 ,0, 0]
-print(conti1(test1))
+
+
 # ---------------------------------------------------------------------------------
 test2 = [[0] * 10 for _ in range(10)]
 for r in range(5):

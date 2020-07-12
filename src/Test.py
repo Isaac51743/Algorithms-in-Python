@@ -108,4 +108,4 @@ print({} == None)
 mySet = {(1, 2)}
 a = (1, 2)
 print(a in mySet)
-print([0 for _  in range(3)])
+

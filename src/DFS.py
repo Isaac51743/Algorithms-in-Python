@@ -1,80 +1,69 @@
-def findAllSubset(word, curIndex, result):
-    if curIndex == len(word):
+def find_all_subset(word, cur_index, result):
+    if cur_index == len(word):
         if len(result) == 0:
             print('None', end=' ')
         else:
             print(''.join(result), end=' ')
         return
-    findAllSubset(word, curIndex + 1, result)
-    result.append(word[curIndex])
-    findAllSubset(word, curIndex + 1, result)
+    find_all_subset(word, cur_index + 1, result)
+    result.append(word[cur_index])
+    find_all_subset(word, cur_index + 1, result)
     result.pop()
 
-word = 'domi'
-findAllSubset(word, 0, [])
-print()
 
-def permutationOfParenthesis(leftParenthesisLeft, rightParenthesisLeft, result):
-    if leftParenthesisLeft == 0 and rightParenthesisLeft == 0:
+def permutation_of_parenthesis(left_parenthesis_left, right_parenthesis_left, result):
+    if left_parenthesis_left == 0 and right_parenthesis_left == 0:
         print(''.join(result), end=' ')
         return
-    if leftParenthesisLeft > 0:
+    if left_parenthesis_left > 0:
         result.append('{')
-        permutationOfParenthesis(leftParenthesisLeft - 1, rightParenthesisLeft, result)
+        permutation_of_parenthesis(left_parenthesis_left - 1, right_parenthesis_left, result)
         result.pop()
-    if leftParenthesisLeft < rightParenthesisLeft:
+    if left_parenthesis_left < right_parenthesis_left:
         result.append('}')
-        permutationOfParenthesis(leftParenthesisLeft, rightParenthesisLeft - 1, result)
+        permutation_of_parenthesis(left_parenthesis_left, right_parenthesis_left - 1, result)
         result.pop()
 
-permutationOfParenthesis(3, 3, [])
-print()
 
-def allCombinationOfCoin(coinType, curIndex, remainAmount, combination):
-    if curIndex == len(coinType):
-        if remainAmount == 0:
+def all_combination_of_coin(coin_types, cur_index, remain_amount, combination):
+    if cur_index == len(coin_types):
+        if remain_amount == 0:
             print(combination)
             return
         else:
             return
-    curCoin =coinType[curIndex]
-    coinNumber = remainAmount // curCoin
-    for number in range(coinNumber + 1):
-        combination[curCoin] = number
-        allCombinationOfCoin(coinType, curIndex + 1, remainAmount - number * curCoin, combination)
+    cur_coin = coin_types[cur_index]
+    coin_number = remain_amount // cur_coin
+    for number in range(coin_number + 1):
+        combination[cur_coin] = number
+        all_combination_of_coin(coin_types, cur_index + 1, remain_amount - number * cur_coin, combination)
 
-coinType = [8, 4, 2]
-allCombinationOfCoin(coinType, 0, 10, {})
 
-def permutationOfString1(letterList, curIndex):
-    if curIndex == len(letterList):
-        print(''.join(letterList), end=' ')
+def permutation_of_string1(letter_list, cur_index):
+    if cur_index == len(letter_list):
+        print(''.join(letter_list), end=' ')
         return
-    for index in range(curIndex, len(letterList)):
-        letterList[curIndex], letterList[index] = letterList[index], letterList[curIndex]
-        permutationOfString1(letterList, curIndex + 1)
-        letterList[curIndex], letterList[index] = letterList[index], letterList[curIndex]
+    for index in range(cur_index, len(letter_list)):
+        letter_list[cur_index], letter_list[index] = letter_list[index], letter_list[cur_index]
+        permutation_of_string1(letter_list, cur_index + 1)
+        letter_list[cur_index], letter_list[index] = letter_list[index], letter_list[cur_index]
 
-def permutationOfString2(letterList, visitedIndex, result):
-    if len(visitedIndex) == len(letterList):
+
+def permutation_of_string2(letter_list, visited_index, result):
+    if len(visited_index) == len(letter_list):
         print(''.join(result), end=' ')
         return
-    for index in range(len(letterList)):
-        if index not in visitedIndex:
-            visitedIndex.add(index)
-            result.append(letterList[index])
-            permutationOfString2(letterList, visitedIndex, result)
+    for index in range(len(letter_list)):
+        if index not in visited_index:
+            visited_index.add(index)
+            result.append(letter_list[index])
+            permutation_of_string2(letter_list, visited_index, result)
             result.pop()
-            visitedIndex.remove(index)
+            visited_index.remove(index)
 
-letterList = list('abc')
-permutationOfString1(letterList, 0)
-print()
-permutationOfString2(letterList, set(), [])
-print()
 
 # assuming one node only contribute to one circle
-def findCircleNumber(edges):
+def find_circle_number(edges):
     table = {}
     for edge in edges:
         if edge[0] not in table:
@@ -82,23 +71,38 @@ def findCircleNumber(edges):
         else:
             table[edge[0]].append(edge[1])
     # 'visited' stores nodes that has been explored all circular path
-    visitedNode = set()
-    circleNum = 0
-    def dfs(node, path):
-        if len(path) > 0 and node == path[0]:
-            nonlocal circleNum
-            circleNum += 1
+    visited_node = set()
+    circle_num = 0
+
+    def dfs(cur_node, path):
+        if len(path) > 0 and cur_node == path[0]:
+            nonlocal circle_num
+            circle_num += 1
             return
-        for nextNode in table[node]:
+        for next_node in table[cur_node]:
             # don't need to visit visted nodes and nodes already in the path
-            if nextNode not in path[1:] and nextNode not in visitedNode:
-                path.append(node)
-                dfs(nextNode, path)
+            if next_node not in path[1:] and next_node not in visited_node:
+                path.append(cur_node)
+                dfs(next_node, path)
                 path.pop()
+
     for node in table:
         dfs(node, [])
-        visitedNode.add(node)
-    print(circleNum)
+        visited_node.add(node)
+    print(visited_node)
 
-edges = [('a', 'c'), ('c', 'e'), ('b', 'd'), ('d', 'a'), ('a', 'b'), ('e', 'f'), ('f', 'c'), ('a', 'a')]
-findCircleNumber(edges)
+
+test_word = 'domi'
+find_all_subset(test_word, 0, [])
+print()
+permutation_of_parenthesis(3, 3, [])
+print()
+test_coin_types = [8, 4, 2]
+all_combination_of_coin(test_coin_types, 0, 10, {})
+test_letter_list = list('abc')
+permutation_of_string1(test_letter_list, 0)
+print()
+permutation_of_string2(test_letter_list, set(), [])
+print()
+test_edges = [('a', 'c'), ('c', 'e'), ('b', 'd'), ('d', 'a'), ('a', 'b'), ('e', 'f'), ('f', 'c'), ('a', 'a')]
+find_circle_number(test_edges)

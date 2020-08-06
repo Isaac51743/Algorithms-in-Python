@@ -1,36 +1,32 @@
-def setKthBitTo(number, k, oneOrZero):
+def set_kth_bit_to(number, k, one_or_zero):
     print(bin(number), end=' ')
-    shiftedOne = 1 << (k - 1)
-    if oneOrZero:
-        number = number | shiftedOne
+    shifted_one = 1 << (k - 1)
+    if one_or_zero:
+        number = number | shifted_one
     else:
-        shiftedZero = ~shiftedOne
-        number = number & shiftedZero
+        shifted_zero = ~shifted_one
+        number = number & shifted_zero
     print(bin(number), end=' ')
     return number
 
-testNumber = 1
-print(setKthBitTo(testNumber, 3, 1))
 
-def isPowerTo2(number):
+def is_power_to_2(number):
     return number & (number - 1) == 0 and number > 0
 
-print(isPowerTo2(16))
 
 # num1 and num2 are positive
-def numberOfDifferentBits(number1, number2):
-    XOR = number1 ^ number2
+def number_different_bits(number1, number2):
+    xor = number1 ^ number2
     count = 0
-    while XOR > 0:
-        XOR = XOR >> 1
-        if XOR & 1 == 1:
+    while xor > 0:
+        xor = xor >> 1
+        if xor & 1 == 1:
             count += 1
     return count
 
-print(numberOfDifferentBits(1, 7))
 
 # assuming 32 bit machine
-def isLetterunique(word):
+def is_letter_unique(word):
     positions = [0] * 8
     for letter in word:
         position = ord(letter) // 32
@@ -41,35 +37,41 @@ def isLetterunique(word):
             return False
     return True
 
-print(isLetterunique('.sfaeg'))
 
-def reverseEveryBit(number):
+def reverse_every_bit(number):
     print(bin(number), end=' ')
     length = len(bin(number)) - 2
     for shift in range(length):
         number = number ^ (1 << shift)
     return number
 
-print(reverseEveryBit(5))
 
-def hexadecimalRepresentation(number):
+def hexadecimal_representation(number):
     result = []
     while number > 0:
-        curPosition = number % 16
+        cur_position = number % 16
         number = number // 16
-        if curPosition > 9:
-            result.append(chr(curPosition - 10 + ord('A')))
+        if cur_position > 9:
+            result.append(chr(cur_position - 10 + ord('A')))
         else:
-            result.append(str(curPosition))
+            result.append(str(cur_position))
     result.append('x')
     result.append('0')
+
     # reverse
-    leftIndex = 0
-    rightIndex = len(result) - 1
-    while leftIndex < rightIndex:
-        result[leftIndex], result[rightIndex] = result[rightIndex], result[leftIndex]
-        leftIndex += 1
-        rightIndex -= 1
+    left_index = 0
+    right_index = len(result) - 1
+    while left_index < right_index:
+        result[left_index], result[right_index] = result[right_index], result[left_index]
+        left_index += 1
+        right_index -= 1
     return ''.join(result)
 
-print(hexadecimalRepresentation(100))
+
+testNumber = 1
+print(set_kth_bit_to(testNumber, 3, 1))
+print(is_power_to_2(16))
+print(number_different_bits(1, 7))
+print(is_letter_unique('.sfaeg'))
+print(reverse_every_bit(5))
+print(hexadecimal_representation(100))

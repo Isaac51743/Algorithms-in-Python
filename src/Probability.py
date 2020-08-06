@@ -2,7 +2,7 @@ import random as R
 import Heap as H
 print('Probability:')
 
-def shufflePoker(array):
+def shuffle_poker(array):
     if len(array) != 52:
         print('invalid array')
         return
@@ -10,7 +10,7 @@ def shufflePoker(array):
         randomIndex = R.randint(index, len(array) - 1)
         array[index], array[randomIndex] = array[randomIndex], array[index]
 testArray = [i for i in range(52)]
-shufflePoker(testArray)
+shuffle_poker(testArray)
 print(testArray)
 # -----------------------------------------------------------------------------------
 def getRandomElementInFlow(input, timeIndex):

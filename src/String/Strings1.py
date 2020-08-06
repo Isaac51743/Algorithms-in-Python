@@ -37,7 +37,7 @@ def spaceRemoval(text):
         if wordsNum > 0:
             text[slowPointer] = ' '
             slowPointer += 1
-        while text[fastPointer] != ' ':
+        while fastPointer < len(text) and text[fastPointer] != ' ':
             text[slowPointer], text[fastPointer] = text[fastPointer], text[slowPointer]
             slowPointer += 1
             fastPointer += 1

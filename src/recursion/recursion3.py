@@ -1,5 +1,5 @@
-import Tree as T
-import DataStructure2 as DS2
+import tree as T
+import data_structure2 as DS2
 print()
 print('Recursion3:')
 #            4

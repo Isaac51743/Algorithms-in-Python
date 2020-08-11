@@ -1,5 +1,5 @@
 import random as R
-import Heap as H
+import heap as H
 print('Probability:')
 
 def shuffle_poker(array):

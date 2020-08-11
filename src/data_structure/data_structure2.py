@@ -1,4 +1,4 @@
-import DataStructure1 as DS1
+import data_structure1 as DS1
 print()
 
 def selectionSort(array):

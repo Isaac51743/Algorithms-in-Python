@@ -1,4 +1,4 @@
-import BFS as B
+import bfs as B
 print('Hash table:')
 def findTopKFrequentWord(text, k):
     dictionary = {}

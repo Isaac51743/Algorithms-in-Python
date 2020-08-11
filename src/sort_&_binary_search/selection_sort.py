@@ -1,4 +1,6 @@
 # 06/28/2020
+
+
 def selectionSort(array):
     if array == None or len(array) == 0:
         return array

@@ -1,4 +1,4 @@
-import DataStructure1 as DS1
+import data_structure1 as DS1
 print()
 class TreeNode(object):
     def __init__(self, value = -1, leftChild = None, rightChild = None):

@@ -1,5 +1,5 @@
-import DataStructure2 as DS2
-import Tree as T
+import data_structure2 as DS2
+import tree as T
 print('Recursion2:')
 # -----------------------------------------------------------------------------------
 def reverseEachPairInLinkedList(head):

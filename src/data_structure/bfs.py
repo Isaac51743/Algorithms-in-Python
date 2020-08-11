@@ -1,6 +1,6 @@
-import Tree as T
-import DataStructure1 as DS1
-import Heap as H
+import tree as T
+import data_structure1 as DS1
+import heap as H
 print()
 def BFS1(root):
     if root == None:

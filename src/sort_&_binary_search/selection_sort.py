@@ -1,18 +1,17 @@
-# 06/28/2020
+# 08/12/2020
 
 
-def selectionSort(array):
-    if array == None or len(array) == 0:
+def selection_sort(array):
+    if len(array) == 0:
         return array
-    arrayLength = len(array)
-    for startOfUnsortedSubarray in range(arrayLength - 1):
-        indexOfMin = startOfUnsortedSubarray
-        for index in range(startOfUnsortedSubarray + 1, arrayLength):
-            if array[index] < array[indexOfMin]:
-                indexOfMin = index
-        array[startOfUnsortedSubarray], array[indexOfMin] = array[indexOfMin], array[startOfUnsortedSubarray]
+    for head_of_unsorted in range(len(array) - 1):
+        index_min = head_of_unsorted
+        for index in range(head_of_unsorted + 1, len(array)):
+            index_min = index if array[index_min] > array[index] else index_min
+        array[index_min], array[head_of_unsorted] = array[head_of_unsorted], array[index_min]
     return array
 
+
 unsortedArray = [-2, 5, 7, 3, 6]
-sortedArray = selectionSort(unsortedArray)
+sortedArray = selection_sort(unsortedArray)
 print(sortedArray)

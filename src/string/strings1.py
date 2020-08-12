@@ -9,6 +9,7 @@ def charRemoval1(text, charSet):
             slowPointer += 1
     return ''.join(text[:slowPointer])
 
+
 def charRemoval2(text, charSet):
     if len(text) == 0:
         return None
@@ -22,6 +23,7 @@ def charRemoval2(text, charSet):
             text[leftBound], text[rightBound] = text[rightBound], text[leftBound]
             rightBound -= 1
     return ''.join(text[:leftBound])
+
 
 def spaceRemoval(text):
     if len(text) == 0:
@@ -44,10 +46,12 @@ def spaceRemoval(text):
         wordsNum += 1
     return ''.join(text[:slowPointer])
 
+
 testText1 = '   zhaoyuehang is a     handsome man  '
 print(charRemoval1(testText1, {'a', 'o'}))
 print(charRemoval2(testText1, {'a', 'o'}))
 print(spaceRemoval(testText1))
+
 
 def deduplication(text):
     if len(text) <= 1:
@@ -59,6 +63,7 @@ def deduplication(text):
             text[fastPointer], text[slowPointer] = text[slowPointer], text[fastPointer]
             slowPointer += 1
     return ''.join(text[:slowPointer])
+
 
 def deleteContiguousSameLetter(text):
     if len(text) <= 1:
@@ -77,13 +82,17 @@ def deleteContiguousSameLetter(text):
             stackTop -= 1
     return ''.join(text[:stackTop + 1])
 
+
 testText2 = 'thissss messsege     hasss nnno dduppllicatttion'
 print(deduplication(testText2))
 testText3 = 'zbbccccbbyeeeehee'
 print(deleteContiguousSameLetter(testText3))
 
+
 def orderOfLetter(letter):
     return ord(letter) - ord('a') + 1
+
+
 # assuming lower case letter
 def findSubString(text, segment):
     if len(text) == 0 or len(segment) == 0 or len(segment) > len(text):
@@ -106,6 +115,7 @@ def findSubString(text, segment):
         startIndex += 1
         endIndex += 1
     return position
+
 
 testText4 = 'hzabcbchooifahabcbcfoinabcbce'
 segment = 'abcbc'

@@ -1,14 +1,14 @@
 # 6/28/2020
 
 
-def binary_search_recursion(array, start_index, end_index, target):  # assuming array is not None and len(array) >= 1
-    if start_index > end_index:
+def binary_search_recursion(array, left_index, right_index, target) -> int:
+    if left_index > right_index:
         return -1
-    mid_index = start_index + (end_index - start_index) // 2
-    if array[mid_index] < target:
-        return binary_search_recursion(array, mid_index + 1, end_index, target)
-    elif array[mid_index] > target:
-        return binary_search_recursion(array, start_index, mid_index - 1, target)
+    mid_index = left_index + (right_index - left_index) // 2
+    if array[mid_index] > target:
+        return binary_search_recursion(array, left_index, mid_index - 1, target)
+    elif array[mid_index] < target:
+        return binary_search_recursion(array, mid_index + 1, right_index, target)
     else:
         return mid_index
 

@@ -1,19 +1,22 @@
-# 6/28/2020
-def quickSort(array, startIndex, endIndex):
-    if startIndex >= endIndex:
+# 08/12/2020
+
+
+def quick_sort(array, start_index, end_index):
+    if start_index >= end_index:
         return
-    startOfUnsorted = startIndex
-    endOfUnsorted = endIndex - 1
-    while startOfUnsorted <= endOfUnsorted:
-        if array[startOfUnsorted] < array[endIndex]:
-            startOfUnsorted += 1
+    left_index, = start_index
+    right_index = end_index - 1
+    while left_index <= right_index:
+        if array[left_index] < array[end_index]:
+            left_index += 1
         else:
-            array[startOfUnsorted], array[endOfUnsorted] = array[endOfUnsorted], array[startOfUnsorted]
-            endOfUnsorted -= 1
-    array[startOfUnsorted], array[endIndex] = array[endIndex], array[startOfUnsorted]
-    quickSort(array, startIndex, startOfUnsorted - 1)
-    quickSort(array, startOfUnsorted + 1, endIndex)
+            array[left_index], array[right_index] = array[right_index], array[left_index]
+            right_index -= 1
+    array[left_index], array[end_index] = array[end_index], array[left_index]
+    quick_sort(array, start_index, right_index)
+    quick_sort(array, left_index + 1, end_index)
+
 
 original = [1, 4, 6, 7, 3, 45, 8, 3, 7, 4, 8, 68, 23]
-quickSort(original, 0, len(original) - 1)
+quick_sort(original, 0, len(original) - 1)
 print(original)

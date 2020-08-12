@@ -4,6 +4,7 @@ def reverseRecursion(text, leftIndex, rightIndex):
     text[leftIndex], text[rightIndex] = text[rightIndex], text[leftIndex]
     return reverseRecursion(text, leftIndex + 1, rightIndex - 1)
 
+
 def reverseIteration(text):
     if len(text) == 0:
         return text
@@ -15,6 +16,7 @@ def reverseIteration(text):
         leftBound += 1
         rightBound -= 1
     return ''.join(text)
+
 
 def reverseWordOrder(text):
     if len(text) == 0:
@@ -33,10 +35,12 @@ def reverseWordOrder(text):
         startIndex = endIndex
     return reverseRecursion(text, 0, len(text) - 1)
 
+
 testText1 = 'zhao yue hang'
 print(reverseRecursion(list(testText1), 0, len(testText1) - 1))
 print(reverseIteration(testText1))
 print(reverseWordOrder(testText1))
+
 
 def isSame(word1, word2):
     if len(word1) != len(word2):
@@ -45,6 +49,8 @@ def isSame(word1, word2):
         if word1[index] != word2[index]:
             return False
     return True
+
+
 def replacement(text, segment1, segment2):
     if len(text) == 0 or len(segment2) == 0:
         return text
@@ -90,6 +96,7 @@ def replacement(text, segment1, segment2):
 testText2 = 'my name is hang, and all my friends like hang. hang is from my father.'
 print(replacement(testText2, 'hang', 'zhaoyuehang'))
 print(replacement(testText2, 'hang', 'ZYH'))
+
 
 # the length of input text is always even
 def shuffle(text, leftIndex, rightIndex):

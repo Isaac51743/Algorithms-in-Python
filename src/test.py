@@ -66,4 +66,4 @@ from math import sin, radians
 print(sin(radians(90)))
 a = ['1:a:b:c', '1:ab:b:c']
 a.sort()
-print(a[1] > a[0])
+print(not [])

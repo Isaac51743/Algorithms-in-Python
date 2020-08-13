@@ -4,7 +4,7 @@
 def quick_sort(array, start_index, end_index):
     if start_index >= end_index:
         return
-    left_index, = start_index
+    left_index = start_index
     right_index = end_index - 1
     while left_index <= right_index:
         if array[left_index] < array[end_index]:
@@ -17,6 +17,6 @@ def quick_sort(array, start_index, end_index):
     quick_sort(array, left_index + 1, end_index)
 
 
-original = [1, 4, 6, 7, 3, 45, 8, 3, 7, 4, 8, 68, 23]
+original = [1, 74, 6, 7, 3, 45, 8, 3, 7, 4, 8, 68, 23]
 quick_sort(original, 0, len(original) - 1)
 print(original)

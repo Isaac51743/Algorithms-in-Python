@@ -1,173 +1,180 @@
-import data_structure1 as DS1
-print()
 
-def selectionSort(array):
-    if array == None or len(array) <= 1:
-        return array
-    stack = DS1.Stack()
-    sorted = DS1.Stack()
-    for element in array:
-        stack.push(element)
-    while stack.getSize() > 0:
-        unsortedLength = stack.getSize()
-        minimum = stack.getTop()
-        replicaOfMinimum = 0
-        while not stack.isEmpty():
-            temporal = stack.pop()
-            if temporal < minimum:
-                minimum = temporal
-                replicaOfMinimum = 1
-            elif temporal == minimum:
-                replicaOfMinimum += 1
-            sorted.push(temporal)
-        for i in range(unsortedLength):
-            temporal = sorted.pop()
-            if temporal != minimum:
-                stack.push(temporal)
-        for i in range(replicaOfMinimum):
-            sorted.push(minimum)
-    while not sorted.isEmpty():
-        stack.push(sorted.pop())
-    result = []
-    while not stack.isEmpty():
-        result.append(stack.pop())
-    return result
 
-testArray1 = [1, 5, 3, 5, 25, 2, 34, 9, 10]
-print(selectionSort(testArray1))
-# --------------------------------------------------------------------------------
-class DequeWithThreeStack(object):
+def selection_sort_with_2_stacks(array):
+    if len(array) == 0:
+        return None
+    stack1 = [] # unsorted
+    stack2 = [] # sorted
+    for num in array:
+        stack1.append(num)
+    while len(stack1) > 0:
+        minimum = float('inf')
+        replica_num = 0
+        unsorted_num = len(stack1)
+        while len(stack1) > 0:
+            temp = stack1.pop()
+            if temp == minimum:
+                replica_num += 1
+            elif temp < minimum:
+                minimum = temp
+                replica_num = 1
+            stack2.append(temp)
+        for i in range(unsorted_num):
+            temp = stack2.pop()
+            if temp != minimum:
+                stack1.append(temp)
+        for i in range(replica_num):
+            stack2.append(minimum)
+    return stack2
+
+
+test_array1 = [1, 5, 3, 5, 25, 2, 34, 9, 10]
+print(selection_sort_with_2_stacks(test_array1))
+
+
+class DequeWithThreeStack():
+
     def __init__(self):
-        self.stackLeft = DS1.Stack()
-        self.stackRight = DS1.Stack()
-        self.transfer = DS1.Stack()
-    def pushLeft(self, element):
-        self.stackLeft.push(element)
-    def pushRight(self, element):
-        self.stackRight.push(element)
-    def popLeft(self):
-        if self.stackLeft.getSize() == 0:
-            if self.stackRight.getSize() == 0:
-                print('Deque is empty!')
-                return None
-            else:
-                for i in range(self.stackRight.getSize() // 2):
-                    self.transfer.push(self.stackRight.pop())
-                while not self.stackRight.isEmpty():
-                    self.stackLeft.push(self.stackRight.pop())
-                while not self.transfer.isEmpty():
-                    self.stackRight.push(self.transfer.pop())
-        return self.stackLeft.pop()
-    def popRight(self):
-        if self.stackRight.getSize() == 0:
-            if self.stackLeft.getSize() == 0:
-                print('Deque is empty!')
-                return None
-            else:
-                for i in range(self.stackLeft.getSize() // 2):
-                    self.transfer.push(self.stackLeft.pop())
-                while not self.stackLeft.isEmpty():
-                    self.stackRight.push(self.stackLeft.pop())
-                while not self.transfer.isEmpty():
-                    self.stackLeft.push(self.transfer.pop())
-        return self.stackRight.pop()
+        self.left_stack = []
+        self.right_stack = []
+        self.helper_stack = []
+
+    def push_left(self, num):
+        self.left_stack.append(num)
+
+    def push_right(self, num):
+        self.right_stack.append(num)
+
+    def is_empty(self):
+        return len(self.left_stack) == 0 and len(self.right_stack) == 0
+
+    def pop_left(self):
+        if self.is_empty():
+            return None
+        elif len(self.left_stack) == 0:
+            shift_num = len(self.right_stack) // 2
+            for i in range(shift_num):
+                self.helper_stack.append(self.right_stack.pop())
+            while len(self.right_stack) > 0:
+                self.left_stack.append(self.right_stack.pop())
+            while len(self.helper_stack) > 0:
+                self.right_stack.append(self.helper_stack.pop())
+        return self.left_stack.pop()
+
+    def pop_right(self):
+        if self.is_empty():
+            return None
+        elif len(self.right_stack) == 0:
+            shift_num = len(self.left_stack) // 2
+            for i in range(shift_num):
+                self.helper_stack.append(self.left_stack.pop())
+            while len(self.left_stack) > 0:
+                self.right_stack.append(self.left_stack.pop())
+            while len(self.helper_stack) > 0:
+                self.left_stack.append(self.helper_stack.pop())
+        return self.right_stack.pop()
+
 
 deque = DequeWithThreeStack()
-for element in testArray1:
-    deque.pushLeft(element)
-print(deque.popRight())
-# --------------------------------------------------------------------------------
+for element in test_array1:
+    deque.push_left(element)
+print(deque.pop_right())
+
+
 class ListNode(object):
+
     def __init__(self, value):
         self.value = value
         self.next = None
 
-def reverseLinkedListIteration(head):
-    if head == None or head.next == None:
-        return head
-    preNode = None
-    curNode = head
-    while curNode != None:
-        nextNode = curNode.next
-        curNode.next = preNode
-        preNode = curNode
-        curNode = nextNode
-    return preNode
 
-def reverseLinkedListRecursion(head):
-    if head == None:
-        return None
-    # base case
-    if head.next == None:
+def reverse_linked_list_iteration(head):
+    if not head:
         return head
-    nextNode = head.next
-    newHead = reverseLinkedListRecursion(nextNode)
-    nextNode.next = head
+    pre_node = None
+    cur_node = head
+    while cur_node:
+        next_node = cur_node.next
+        cur_node.next = pre_node
+        pre_node = cur_node
+        cur_node = next_node
+    return pre_node
+
+
+def reverse_linked_list_recursion(head):
+    if not head or not head.next:
+        return head
+    new_head = reverse_linked_list_recursion(head.next)
+    head.next.next = head
     head.next = None
-    return newHead
+    return new_head
 
-def findMidPoint(head):
-    if head == None or head.next == None:
+
+def find_mid_point(head):
+    if not head:
         return head
-    fastPointer = head
-    slowPointer = head
-    while fastPointer.next != None and fastPointer.next.next != None:
-        slowPointer = slowPointer.next
-        fastPointer = fastPointer.next.next
-    return slowPointer
+    slow = fast = head
+    while fast.next and fast.next.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
 
-def hasCircle(head):
-    if head == None:
+
+def has_circle(head):
+    if not head:
         return False
-    slowPointer = fastPointer = head
-    while fastPointer.next != None and fastPointer.next.next != None:
-        slowPointer = slowPointer.next
-        fastPointer = fastPointer.next.next
-        if fastPointer == slowPointer:
+    slow = fast = head
+    while fast.next and fast.next.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
             return True
     return False
 
-def insertLinkedList(head, element):
-    curNode = head
-    preNode = None
-    while curNode != None and curNode.value < element:
-        preNode = curNode
-        curNode = curNode.next
-    if curNode == head:
-        newHead = ListNode(element)
-        newHead.next = curNode
-        return newHead
+
+def insert_linked_list(head, num):
+    cur = head
+    pre = None
+    while cur and cur.value < num:
+        pre = cur
+        cur = cur.next
+    if cur == head:
+        new_head = ListNode(num)
+        new_head.next = head
+        return new_head
     else:
-        preNode.next = ListNode(element)
-        preNode.next.next = curNode
+        pre.next = ListNode(num)
+        pre.next.next = cur
         return head
 
-def linkedListPrint(head):
-    curNode = head
-    while curNode != None:
-        print(curNode.value, end=' ')
-        curNode = curNode.next
+
+def linked_list_print(head):
+    cur = head
+    while cur:
+        print(cur.value, end=' ')
+        cur = cur.next
     print()
 
-testHead = ListNode(testArray1[0])
-curNode = testHead
-for index in range(1, len(testArray1)):
-    curNode.next = ListNode(testArray1[index])
+
+test_head = ListNode(test_array1[0])
+curNode = test_head
+for index in range(1, len(test_array1)):
+    curNode.next = ListNode(test_array1[index])
     curNode = curNode.next
 # 1 -> 5 -> 3 -> 5 -> 25 -> 2 -> 34 -> 9 -> 10
 
 print('LinkedList test:')
-linkedListPrint(testHead)
-reversedLinkedList = reverseLinkedListIteration(testHead)
-linkedListPrint(reversedLinkedList)
-linkedListPrint(reverseLinkedListRecursion(reversedLinkedList))
+linked_list_print(test_head)
+reversed_head = reverse_linked_list_iteration(test_head)
+linked_list_print(reversed_head)
+linked_list_print(reverse_linked_list_recursion(reversed_head))
 
-print(findMidPoint(testHead).value)
+print(find_mid_point(test_head).value)
 
-print(hasCircle(testHead))
-curNode.next = testHead
-print(hasCircle(testHead))
+print(has_circle(test_head))
+reversed_head.next = test_head
+print(has_circle(test_head))
+reversed_head.next = None
 
-curNode.next = None
-linkedListPrint(insertLinkedList(testHead, 0))
+linked_list_print(insert_linked_list(test_head, 0))
 

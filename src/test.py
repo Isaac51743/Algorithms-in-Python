@@ -67,3 +67,5 @@ print(sin(radians(90)))
 a = ['1:a:b:c', '1:ab:b:c']
 a.sort()
 print(not [])
+a = open('/Users/yuehangzhao/Downloads/resume/akuna/regular knowledge.docx')
+print(a)

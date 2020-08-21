@@ -41,7 +41,9 @@ del b[1]
 print(int(-3/2))
 from queue import PriorityQueue as pq
 c = pq()
-c.put(1)
+c.put((1, 6000))
+c.put((2, 3))
+print('priority queue test:', c.get())
 from collections import deque
 d = deque([])
 print('zhaoyu ehag'.split())
@@ -60,7 +62,7 @@ def threeAndFive(num, result):
 result = []
 threeAndFive(3, result)
 threeAndFive(5, result)
-print(result)
+print((1, 4, 2, 10, 4))
 
 from math import sin, radians
 print(sin(radians(90)))

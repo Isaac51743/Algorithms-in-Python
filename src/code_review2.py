@@ -100,4 +100,20 @@ def critical_connections(n: int, connections: list) -> list:
     return dfs(1, 0, -1)
 
 
-print(critical_connections(4, [[0,1],[1,2],[2,0],[1,3]]))
+print(critical_connections(4, [[0, 1], [1, 2], [2, 0], [1, 3]]))
+
+
+def find_pair_songs(durations, total_time, num_songs):
+    index_dict = {}
+    result_pair = (-1, -1)
+    for i in range(num_songs):
+        remain = total_time - durations[i]
+        if remain in index_dict:
+            temp_pair = (i, index_dict[remain]) if durations[i] < durations[index_dict[remain]] else (index_dict[remain], i)
+            result_pair = temp_pair if result_pair[-1] == -1 or durations[temp_pair[-1]] > durations[result_pair[-1]] else result_pair
+        else:
+            index_dict[durations[i]] = i
+    return result_pair
+
+
+print(find_pair_songs([1, 10, 25, 35,  60], 60, 5))

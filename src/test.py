@@ -11,6 +11,7 @@ def consecutive(num):
 test3 = {1:22, 2:12}
 print(max(test3))
 
+
 def bridge(time):
     M = [time[0], time[1], time[0] + time[1] + time[2]]
     for i in range(3, len(time)):

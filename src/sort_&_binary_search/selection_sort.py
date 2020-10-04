@@ -1,14 +1,15 @@
-# 08/12/2020
+# 09/08/2020
 
 
 def selection_sort(array):
     if len(array) == 0:
         return array
-    for head_of_unsorted in range(len(array) - 1):
-        index_min = head_of_unsorted
-        for index in range(head_of_unsorted + 1, len(array)):
-            index_min = index if array[index_min] > array[index] else index_min
-        array[index_min], array[head_of_unsorted] = array[head_of_unsorted], array[index_min]
+    for start_of_unsorted in range(len(array) - 1):
+        min_index = start_of_unsorted
+        for i in range(start_of_unsorted + 1, len(array)):
+            if array[i] < array[min_index]:
+                min_index = i
+        array[min_index], array[start_of_unsorted] = array[start_of_unsorted], array[min_index]
     return array
 
 

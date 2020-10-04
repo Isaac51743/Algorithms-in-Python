@@ -1,4 +1,4 @@
-# 6/28/2020
+# 09/08/2020
 
 
 def binary_search_recursion(array, left_index, right_index, target) -> int:
@@ -16,14 +16,14 @@ def binary_search_recursion(array, left_index, right_index, target) -> int:
 def binary_search_iteration(array, target):
     if len(array) == 0:
         return -1
-    left_index = 0
-    right_index = len(array) - 1
-    while left_index <= right_index:
-        mid_index = left_index + (right_index - left_index) // 2
+    left_bound = 0
+    right_bound = len(array) - 1
+    while left_bound <= right_bound:
+        mid_index = left_bound + (right_bound - left_bound) // 2
         if array[mid_index] < target:
-            left_index = mid_index + 1
+            left_bound = mid_index + 1
         elif array[mid_index] > target:
-            right_index = mid_index - 1
+            right_bound = mid_index - 1
         else:
             return mid_index
     return -1
@@ -65,6 +65,20 @@ def binary_search_2d_recursion(matrix, target, left_index, right_index) -> tuple
         return row, column
 
 
+# assume left_index < right_index, array is valid
+def binary_search_closet_index_recursion(array, target, left_index, right_index):
+    if left_index == right_index - 1:
+        return left_index if abs(array[left_index] - target) < abs(array[right_index] - target) else right_index
+
+    mid_index = left_index + (right_index - left_index) // 2
+    if array[mid_index] > target:
+        return binary_search_closet_index_recursion(array, target, left_index, mid_index)
+    elif array[mid_index] < target:
+        return binary_search_closet_index_recursion(array, target, mid_index, right_index)
+    else:
+        return mid_index
+
+
 def binary_search_closet_index1(array, target) -> int:
     if len(array) == 0:
         return -1
@@ -80,7 +94,7 @@ def binary_search_closet_index1(array, target) -> int:
             return mid_index
 
     # final range with length 2
-    return left_index if abs(array[left_index] - target) < abs(array[left_index] - target) else right_index
+    return left_index if abs(array[left_index] - target) < abs(array[right_index] - target) else right_index
 
 
 def binary_search_closet_index2(array, target) -> int:
@@ -144,7 +158,7 @@ def binary_search_first_occur_index2(array, target) -> int:
         return -1
 
 
-def binary_search_largest_smaller_equal(array, target):
+def binary_search_largest_smaller_or_equal(array, target):
     if len(array) == 0:
         return -1
     left_index = 0
@@ -198,12 +212,13 @@ print(binary_search_iteration(original, 2))
 print("search closet")
 print(binary_search_closet_index1(original, 15))
 print(binary_search_closet_index2(original, 15))
+print(binary_search_closet_index_recursion(original, 15, 0, len(original) - 1))
 print("search first occur(no valid result maybe):")
 print(binary_search_first_occur_index1(original, 10))
 print(binary_search_first_occur_index2(original, 14))
 print("search largest smaller or equal number(no valid result maybe):")
 test = [4, 15, 26]
-print(binary_search_largest_smaller_equal(test, 10))
+print(binary_search_largest_smaller_or_equal(test, 10))
 
 test_matrix = [[1, 4, 6], [8, 9, 12], [24, 35, 67]]
 print("binary search in matrix:")

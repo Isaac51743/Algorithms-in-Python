@@ -1,20 +1,20 @@
-# 08/12/2020
+# 09/08/2020
 
 
 def quick_sort(array, start_index, end_index):
     if start_index >= end_index:
         return
-    left_index = start_index
-    right_index = end_index - 1
-    while left_index <= right_index:
-        if array[left_index] < array[end_index]:
-            left_index += 1
+    left_bound = start_index
+    right_bound = end_index - 1
+    while left_bound <= right_bound:
+        if array[left_bound] < array[end_index]:
+            left_bound += 1
         else:
-            array[left_index], array[right_index] = array[right_index], array[left_index]
-            right_index -= 1
-    array[left_index], array[end_index] = array[end_index], array[left_index]
-    quick_sort(array, start_index, right_index)
-    quick_sort(array, left_index + 1, end_index)
+            array[left_bound], array[right_bound] = array[right_bound], array[left_bound]
+            right_bound -= 1
+    array[left_bound], array[end_index] = array[end_index], array[left_bound]
+    quick_sort(array, start_index, left_bound - 1)
+    quick_sort(array, left_bound + 1, end_index)
 
 
 original = [1, 74, 6, 7, 3, 45, 8, 3, 7, 4, 8, 68, 23]

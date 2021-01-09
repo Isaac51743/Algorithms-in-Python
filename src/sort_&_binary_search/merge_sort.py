@@ -1,22 +1,22 @@
-# 09/08/2020
-
-
+# 12/18/2020
 # assuming array is not None and has >= 1 element
 # helper is an assistant array with the same length of original array
-def merge_sort(array, start_index, end_index, helper):
-    if start_index == end_index:
+
+
+def merge_sort(array, left_index, right_index, helper):
+    if left_index == right_index:
         return
-    mid_index = start_index + (end_index - start_index) // 2
-    merge_sort(array, start_index, mid_index, helper)
-    merge_sort(array, mid_index + 1, end_index, helper)
-    _merge(array, start_index, mid_index, end_index, helper)
+    mid_index = left_index + (right_index - left_index) // 2
+    merge_sort(array, left_index, mid_index, helper)
+    merge_sort(array, mid_index + 1, right_index, helper)
+    _merge(array, left_index, mid_index, right_index, helper)
 
 
-def _merge(array, start_index, mid_index, end_index, helper):
-    helper[start_index:end_index + 1] = array[start_index:end_index + 1]
-    index1 = index3 = start_index
+def _merge(array, left_index, mid_index, right_index, helper):
+    helper[left_index:right_index + 1] = array[left_index:right_index + 1]
+    index1 = index3 = left_index
     index2 = mid_index + 1
-    while index1 <= mid_index and index2 <= end_index:
+    while index1 <= mid_index and index2 <= right_index:
         if helper[index1] < helper[index2]:
             array[index3] = helper[index1]
             index1 += 1

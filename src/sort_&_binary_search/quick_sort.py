@@ -1,4 +1,4 @@
-# 09/08/2020
+# 12/18/2020
 
 
 def quick_sort(array, start_index, end_index):

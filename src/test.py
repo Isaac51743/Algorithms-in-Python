@@ -1,120 +1,64 @@
-from collections import defaultdict
-from queue import Queue
-from math import sin, radians
-from queue import PriorityQueue as pq
-import math
-from collections import deque
-import sys
+import data_structure1 as ds1
+import tree as t
 
 
-def consecutive(num):
-    count = 0
-    for length in range(1, num + 1):
-        if (num * 2) % length == 0:
-            a1 = num * 2 / length - length - 1
-            if a1 % 2 == 0 and a1 > 0:
-                count += 1
-    return count
+print('simple Stack and Queue:')
+stack1 = ds1.Stack()
+queue1 = ds1.Queue()
+for num in range(10):
+    stack1.push(num)
+    queue1.push(num)
+stack1.stack_print()
+queue1.queue_print()
+while not stack1.is_empty():
+    print(stack1.pop(), end=' ')
+print()
+while not queue1.is_empty():
+    print(queue1.pop(), end=' ')
+print()
 
+print('queue of 2 stacks:')
+queue2 = ds1.QueueOfTwoStack()
+for num in range(10):
+    queue2.push(num)
+queue2.queue_print()
+while not queue2.is_empty():
+    print(queue2.pop(), end=' ')
+print()
 
-def bridge(time):
-    m = [time[0], time[1], time[0] + time[1] + time[2]]
-    for i in range(3, len(time)):
-        tem_time1 = time[1] + time[0] + time[i] + time[1] + m[i - 2]
-        tem_time2 = time[0] + time[i] + m[i - 1]
-        if tem_time1 < tem_time2:
-            m.append(tem_time1)
-        else:
-            m.append(tem_time2)
-    print(m)
-    return m[-1]
+testArray = [6, 6, 3, 6, 3, 3, 1, 2, 3]
+print('stack with min():')
+stack2 = ds1.StackWithMin1()
+for num in testArray:
+    stack2.push(num)
+stack2.stack_print()
+while not stack2.is_empty():
+    print(stack2.pop(), end=' ')
+print()
 
+stack3 = ds1.StackWithMin2()
+for num in testArray:
+    stack3.push(num)
+stack3.stack_print()
+while not stack3.is_empty():
+    print(stack3.pop(), end=' ')
+print()
 
-def threeAndFive(num, result):
-    if num > 10 ** 2:
-        return
-    result.append(num)
-    threeAndFive(num * 3, result)
-    threeAndFive(num * 5, result)
+print('Tree:')
 
+t.pre_order(t.test_root1)
+print()
+t.in_order(t.test_root1)
+print()
+t.post_order(t.test_root1)
+print()
 
-test3 = {1:22, 2:12}
-print(max(test3))
+print('tree height: ' + str(t.get_height(t.test_root1)))
+print(t.is_balanced(t.test_root1))
+print(t.is_symmetric(t.test_root2.left_child, t.test_root2.right_child))
+print(t.is_identical(t.test_root1, t.test_root2))
 
-t = [1, 2, 5, 10]
-print(bridge(t))
+print('whether a BST: ' + str(t.is_bst(t.test_root3, float('-inf'), float('inf'))))
+t.in_order_in_range(t.test_root3, 9, 20)
+print()
 
-a = Queue(10)
-
-# defaultdict
-b = defaultdict(set)
-b[1].add(1)
-print(b[1])
-
-c = pq()
-c.put([1, 6000])
-c.put([2, 3])
-print('priority queue test:', c.get())
-
-d = deque([])
-print('zhaoyu ehag'.split())
-for i in range(0, 0):
-    print('sd')
-
-print(set(t))
-s = sorted(t)
-print(1 >> 5)
-
-result = []
-threeAndFive(3, result)
-threeAndFive(5, result)
-print((1, 4, 2, 10, 4))
-
-print(sin(radians(90)))
-a = ['1:a:b:c', '1:ab:b:c']
-a.sort()
-print(a)
-print(not [])
-
-try:
-    a = open('test_file', 'w')
-    a.write('haah\n')
-finally:
-    a.close()
-with open('test_file', 'a') as a:
-    a.write('zhaoyuehagn\n')
-i = 2
-for i in range(5):
-    print(i)
-print(i)
-
-a = [[2, 1, 1], [1, 1, 0], [0, 1, 1]] * 100
-print("lalaalla", sys.getsizeof(a))
-b = iter(a)
-print(sys.getsizeof(b))
-print(max([max(_) for _ in a]))
-def zhao(a):
-    a = [10]
-    return a
-zhao(a)
-print(a)
-
-with open('output', 'w') as f:
-    f.write('Hello world')
-    print(type(f))
-a = open('output', 'w')
-print(type(a))
-import time
-def log(func):
-    def wrapper(*args):
-        start = time.time()
-        result = func(*args)
-        end = time.time()
-        print(end - start)
-        return result
-    return wrapper
-a = log(zhao)
-print(a([[2, 1, 1], [1, 1, 0], [0, 1, 1]] * 100))
-
-a = [1, 3, 4, 5]
-print(a[2:0:-1])

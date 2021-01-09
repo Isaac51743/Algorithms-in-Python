@@ -1,16 +1,16 @@
 # 09/08/2020
 
 
-def binary_search_recursion(array, left_index, right_index, target) -> int:
-    if left_index > right_index:
+def binary_search_recursion(array, left_idx, right_idx, target):
+    if len(array) == 0 or left_idx > right_idx:
         return -1
-    mid_index = left_index + (right_index - left_index) // 2
-    if array[mid_index] < target:
-        return binary_search_recursion(array, mid_index + 1, right_index, target)
-    elif array[mid_index] > target:
-        return binary_search_recursion(array, left_index, mid_index - 1, target)
+    mid_idx = left_idx + (right_idx - left_idx) // 2
+    if array[mid_idx] > target:
+        return binary_search_recursion(array, left_idx, mid_idx - 1, target)
+    elif array[mid_idx] < target:
+        return binary_search_recursion(array, mid_idx + 1, right_idx, target)
     else:
-        return mid_index
+        return mid_idx
 
 
 def binary_search_iteration(array, target):
@@ -208,7 +208,7 @@ def search_in_unknown_size_dictionary(dictionary, target) -> int:
 original =[2, 4, 6, 8, 9, 14, 14, 16, 17, 25, 27, 34, 56]
 print("binary search(no valid result maybe):")
 print(binary_search_recursion(original, 0, len(original) - 1, 9))
-print(binary_search_iteration(original, 2))
+print(binary_search_iteration(original, 17))
 print("search closet")
 print(binary_search_closet_index1(original, 15))
 print(binary_search_closet_index2(original, 15))

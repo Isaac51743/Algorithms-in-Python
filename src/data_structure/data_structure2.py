@@ -1,6 +1,32 @@
+# 12/23/2020
+def selection_sort_with_2_stacks1(array):
+    if len(array) == 0:
+        return None
+    unsorted = []
+    for num in array:
+        unsorted.append(num)
+    result = []
+    while len(unsorted) > 0:
+        temp_min = float('inf')
+        replica = 0
+        while len(unsorted) > 0:
+            if unsorted[-1] < temp_min:
+                temp_min = unsorted[-1]
+                replica = 1
+            elif unsorted[-1] == temp_min:
+                replica += 1
+            result.append(unsorted.pop())
+        while len(result) > 0 and result[-1] >= temp_min:
+            temp = result.pop()
+            if temp > temp_min:
+                unsorted.append(temp)
+
+        for i in range(replica):
+            result.append(temp_min)
+    return result
 
 
-def selection_sort_with_2_stacks(array):
+def selection_sort_with_2_stacks2(array):
     if len(array) == 0:
         return None
     stack1 = [] # unsorted
@@ -29,10 +55,10 @@ def selection_sort_with_2_stacks(array):
 
 
 test_array1 = [1, 5, 3, 5, 25, 2, 34, 9, 10]
-print(selection_sort_with_2_stacks(test_array1))
+print(selection_sort_with_2_stacks1(test_array1))
 
 
-class DequeWithThreeStack():
+class DequeWithThreeStack:
 
     def __init__(self):
         self.left_stack = []
@@ -133,6 +159,7 @@ def has_circle(head):
 
 
 def insert_linked_list(head, num):
+    # don't need to check none head
     cur = head
     pre = None
     while cur and cur.value < num:

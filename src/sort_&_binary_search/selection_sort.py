@@ -1,18 +1,30 @@
-# 09/08/2020
-
-
+# 12/18/2020
 def selection_sort(array):
     if len(array) == 0:
         return array
-    for start_of_unsorted in range(len(array) - 1):
-        min_index = start_of_unsorted
-        for i in range(start_of_unsorted + 1, len(array)):
-            if array[i] < array[min_index]:
-                min_index = i
-        array[min_index], array[start_of_unsorted] = array[start_of_unsorted], array[min_index]
+    for unsorted_head in range(len(array) - 1):
+        min_idx = unsorted_head
+        for idx in range(unsorted_head, len(array)):
+            min_idx = idx if array[idx] < array[min_idx] else min_idx
+        array[min_idx], array[unsorted_head] = array[unsorted_head], array[min_idx]
     return array
 
 
+def selection_sort_recursion(array, unsorted_head):
+    if len(array) == 0:
+        return array
+    # base case
+    if unsorted_head == len(array) - 1:
+        return array
+
+    # recursion rule
+    min_idx = unsorted_head
+    for idx in range(unsorted_head, len(array)):
+        min_idx = idx if array[idx] < array[min_idx] else min_idx
+    array[unsorted_head], array[min_idx] = array[min_idx], array[unsorted_head]
+    return selection_sort_recursion(array, unsorted_head + 1)
+
+
 unsortedArray = [-2, 5, 7, 3, 6]
-sortedArray = selection_sort(unsortedArray)
-print(sortedArray)
+print(selection_sort(unsortedArray))
+print(selection_sort_recursion(unsortedArray, 0))

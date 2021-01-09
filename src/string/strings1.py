@@ -1,29 +1,30 @@
-def charRemoval1(text, charSet):
+def char_removal1(text, char_set):
     if len(text) == 0:
-        return None
-    text = list(text)
-    slowPointer = 0 # point to next position to be filled
-    for fastPointer in range(len(text)):
-        if text[fastPointer] not in charSet:
-            text[slowPointer], text[fastPointer] = text[fastPointer], text[slowPointer]
-            slowPointer += 1
-    return ''.join(text[:slowPointer])
+        return ''
+    text_list = list(text)
+    slow = 0
+    for fast in range(len(text_list)):
+        if text_list[fast] not in char_set:
+            text_list[slow], text_list[fast] = text_list[fast], text_list[slow]
+            slow += 1
+    return ''.join(text_list[:slow])
 
 
-def charRemoval2(text, charSet):
+# unordered, method like quick sort
+# this method is used to divided the list into two parts.
+def char_removal2(text, char_set):
     if len(text) == 0:
-        return None
-    text = list(text)
-    leftBound = 0
-    rightBound = len(text) - 1
-    while leftBound <= rightBound:
-        if text[leftBound] not in charSet:
-            leftBound += 1
+        return ''
+    text_list = list(text)
+    left = 0
+    right = len(text_list) - 1
+    while left <= right:
+        if text_list[left] not in char_set:
+            left += 1
         else:
-            text[leftBound], text[rightBound] = text[rightBound], text[leftBound]
-            rightBound -= 1
-    return ''.join(text[:leftBound])
-
+            text_list[left], text_list[right] = text_list[right], text_list[left]
+            right -= 1
+    return ''.join(text_list[:left])
 
 def spaceRemoval(text):
     if len(text) == 0:
@@ -48,8 +49,8 @@ def spaceRemoval(text):
 
 
 testText1 = '   zhaoyuehang is a     handsome man  '
-print(charRemoval1(testText1, {'a', 'o'}))
-print(charRemoval2(testText1, {'a', 'o'}))
+print(char_removal1(testText1, {'a', 'o'}))
+print(char_removal2(testText1, {'a', 'o'}))
 print(spaceRemoval(testText1))
 
 

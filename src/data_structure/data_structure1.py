@@ -59,21 +59,6 @@ class Queue(object):
         print(self.array)
 
 
-stack1 = Stack()
-queue1 = Queue()
-for num in range(10):
-    stack1.push(num)
-    queue1.push(num)
-stack1.stack_print()
-queue1.queue_print()
-while not stack1.is_empty():
-    print(stack1.pop(), end=' ')
-print()
-while not queue1.is_empty():
-    print(queue1.pop(), end=' ')
-print()
-
-
 class QueueOfTwoStack(object):
 
     def __init__(self):
@@ -89,9 +74,7 @@ class QueueOfTwoStack(object):
         elif len(self.left_stack) == 0:
             while len(self.right_stack) > 0:
                 self.left_stack.append(self.right_stack.pop())
-            return self.left_stack.pop()
-        else:
-            return self.left_stack.pop()
+        return self.left_stack.pop()
 
     def queue_print(self):
         self.left_stack.reverse()
@@ -101,15 +84,6 @@ class QueueOfTwoStack(object):
 
     def is_empty(self):
         return len(self.left_stack) == 0 and len(self.right_stack) == 0
-
-
-queue2 = QueueOfTwoStack()
-for num in range(10):
-    queue2.push(num)
-queue2.queue_print()
-while not queue2.is_empty():
-    print(queue2.pop(), end=' ')
-print()
 
 
 class StackWithMin1():
@@ -179,22 +153,3 @@ class StackWithMin2():
     def stack_print(self):
         print(self.stack)
         print(self.cur_min)
-
-
-testArray = [6, 6, 3, 6, 3, 3, 1, 2, 3]
-
-stack2 = StackWithMin1()
-for num in testArray:
-    stack2.push(num)
-stack2.stack_print()
-while not stack2.is_empty():
-    print(stack2.pop(), end=' ')
-print()
-
-stack3 = StackWithMin2()
-for num in testArray:
-    stack3.push(num)
-stack3.stack_print()
-while not stack3.is_empty():
-    print(stack3.pop(), end=' ')
-print()

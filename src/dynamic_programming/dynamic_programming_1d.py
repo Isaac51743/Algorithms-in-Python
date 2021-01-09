@@ -1,3 +1,16 @@
+import time
+
+
+def time_record(func):
+    def wrapper(*args):
+        time1 = time.time()
+        result = func(*args)
+        time2 = time.time()
+        print(time2 - time1)
+        return result
+    return wrapper
+
+
 def fibonacci(n):
     result = []
     for i in range(n + 1):
@@ -6,61 +19,79 @@ def fibonacci(n):
         else:
             result.append(result[i - 1] + result[i - 2])
     return result[-1]
+
+
 print(fibonacci(9))
 
-def maxLengthOfAscendingSubarray(array):
+
+def max_length_of_ascending_subarray(array):
     if len(array) == 0:
         return 0
     result = [1]
-    globalMaxLength = result[0]
+    global_max_length = result[0]
     for index in range(1, len(array)):
         if array[index] > array[index - 1]:
             result.append(result[-1] + 1)
-            if result[-1] > globalMaxLength:
-                globalMaxLength = result[-1]
+            if result[-1] > global_max_length:
+                global_max_length = result[-1]
         else:
             result.append(1)
-    return globalMaxLength
+    return global_max_length
 
-testArray = [7, 2, 3, 1, 5, 8, 9, 6]
-print(maxLengthOfAscendingSubarray(testArray))
 
-def maxProductOfRope1(ropeLength):
-    result = [-1, -1]
-    if ropeLength <= 1:
-        return result[ropeLength]
-    for length in range(2, ropeLength + 1):
-        maxProduct = 0
-        for lengthOfShorter in range(1, length // 2 + 1):
-            curProduct = max(lengthOfShorter, result[lengthOfShorter]) * max(length - lengthOfShorter, result[length - lengthOfShorter])
-            maxProduct = max(maxProduct, curProduct)
-        result.append(maxProduct)
-    return result[-1]
+test_array = [7, 2, 3, 1, 5, 8, 9, 6]
+print(max_length_of_ascending_subarray(test_array))
 
-def maxProductOfRope2(ropeLength):
-    result = [-1, -1]
-    if ropeLength <= 1:
-        return result[ropeLength]
-    for length in range(2, ropeLength + 1):
-        maxProduct = 0
-        for leftLength in range(1, length):
-            curProdcut = leftLength * max(length - leftLength, result[length - leftLength])
-            maxProduct = max(curProdcut, maxProduct)
-        result.append(maxProduct)
-    return result[-1]
 
-def maxProductOfRopeRecursion(ropeLength):
-    if ropeLength == 1:
+# the rope must have one cut at least
+@time_record
+def max_product_of_rope1(rope_length):
+    if rope_length <= 1:
         return -1
-    maxProduct = 0
-    for leftLength in range(1, ropeLength):
-        curProduct = leftLength * max(ropeLength - leftLength, maxProductOfRopeRecursion(ropeLength - leftLength))
-        maxProduct = max(maxProduct, curProduct)
-    return maxProduct
+    result = [-1, -1]
+    for length in range(2, rope_length + 1):
+        max_product = 0
+        for length_of_shorter in range(1, length // 2 + 1):
+            length_of_longer = length - length_of_shorter
+            cur_product = max(length_of_shorter, result[length_of_shorter]) * max(length_of_longer, result[length_of_longer])
+            max_product = max(max_product, cur_product)
+        result.append(max_product)
+    return result[-1]
 
-print(maxProductOfRope2(10))
-print(maxProductOfRopeRecursion(10))
-# -----------------------------------------------------------------------------------
+
+# assume left part doesn't have cut
+@time_record
+def max_product_of_rope2(rope_length):
+    if rope_length <= 1:
+        return -1
+    result = [-1, -1]
+    for length in range(2, rope_length + 1):
+        max_product = 0
+        for left_length in range(1, length):
+            right_length = length - left_length
+            cur_product = left_length * max(right_length, result[right_length])
+            max_product = max(cur_product, max_product)
+        result.append(max_product)
+    return result[-1]
+
+
+def max_product_of_rope_recursion(rope_length):
+    if rope_length == 1:
+        return -1
+    max_product = 0
+    for left_length in range(1, rope_length):
+        right_length = rope_length - left_length
+        cur_product = left_length * max(right_length, max_product_of_rope_recursion(right_length))
+        max_product = max(max_product, cur_product)
+    return max_product
+
+
+print('max product of rope:')
+print(max_product_of_rope1(100))
+print(max_product_of_rope2(100))
+print(max_product_of_rope_recursion(10))
+
+
 def jumpToTheEnd(jumpSteps):
     if len(jumpSteps) <= 1:
         return True
@@ -102,6 +133,7 @@ def minJumpToTheEndReverse(reversedJumpSteps):
         result.append(minJumpsToTheEnd)
     return result[-1]
 
+print('jump to the end:')
 testJump = [2, 1, 3, 2, 4, 2]
 print(jumpToTheEnd(testJump))
 testJump.reverse()

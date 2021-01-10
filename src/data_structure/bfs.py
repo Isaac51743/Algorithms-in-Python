@@ -1,6 +1,6 @@
 import tree as t
 import data_structure1 as ds1
-# import heap as h
+import heapq as hq
 
 
 def bfs1(root):
@@ -59,89 +59,51 @@ def is_complete_tree(root):
         return True
     queue = ds1.Queue()
     queue.push(root)
-    last_parent_passed = False
+    bubble_existed = False
     while not queue.is_empty():
         temp = queue.pop()
-        if not temp.left_child or temp.right_child:
-            return False
-        if last_parent_passed and (temp.left_child or temp.right_child):
-            return False
+        # if not temp.left_child or temp.right_child:
+        #     return False
+        # if last_parent_passed and (temp.left_child or temp.right_child):
+        #     return False
 
         if temp.left_child:
+            if bubble_existed:
+                return False
             queue.push(temp.left_child)
         else:
-            last_parent_passed = True
+            bubble_existed = True
 
         if temp.right_child:
+            if bubble_existed:
+                return False
             queue.push(temp.right_child)
         else:
-            last_parent_passed = True
+            bubble_existed = True
     return True
 
 
 print(is_complete_tree(t.test_root3))
-# t.removeBST(t.test_root3, 12)
-# print(is_complete_tree(t.test_root3))
-# t.insertBSTIteration1(t.test_root3, 12)
 
-# class HeapAdv(H.Heap):
-#     def __init__(self):
-#         H.Heap.__init__(self)
-#     # @Override
-#     def percolateUpIteration(self, index):
-#         if index <= 0:
-#             return
-#         while index > 0:
-#             parentIndex = (index - 1) // 2
-#             if self.array[index][0] < self.array[parentIndex][0]:
-#                 self.array[parentIndex], self.array[index] = self.array[index], self.array[parentIndex]
-#                 index = parentIndex
-#             else:
-#                 break
-#
-#     def percolateDownIteration(self, index):
-#         if index > len(self.array) // 2 - 1:
-#             return
-#         while index <= len(self.array) // 2 - 1:
-#             indexLeftChild = index * 2 + 1
-#             indexRightChild = index * 2 + 2
-#             indexMinChild = indexLeftChild
-#             if indexRightChild < len(self.array) and self.array[indexRightChild][0] < self.array[indexLeftChild][0]:
-#                 indexMinChild = indexRightChild
-#             if self.array[index][0] > self.array[indexMinChild][0]:
-#                 self.array[index], self.array[indexMinChild] = self.array[indexMinChild], self.array[index]
-#                 index = indexMinChild
-#             else:
-#                 break
-#
-# def findKSmallestOfSortedMatrix(matrix, k):
-#     if matrix == None or len(matrix) == 0 or len(matrix[0]) == 0 or k == 0:
-#         return None
-#     if k > len(matrix) * len(matrix[0]):
-#         result = []
-#         for row in range(len(matrix)):
-#             for column in range(len(matrix[0])):
-#                 result.append(matrix[row][column])
-#         return result
-#     visited = set()
-#     heap = HeapAdv()
-#     heap.insert([matrix[0][0], 0, 0])
-#     visited.add((0, 0))
-#     result = []
-#     for i in range(k):
-#         curNode = heap.pop()
-#         result.append(curNode[0])
-#         row1 = curNode[1]
-#         column1 = curNode[2] + 1
-#         row2 = curNode[1] + 1
-#         column2 = curNode[2]
-#         if column1 < len(matrix[0]) and (row1, column1) not in visited:
-#             heap.insert([matrix[row1][column1], row1, column1])
-#             visited.add((row1,column1))
-#         if row2 < len(matrix) and (row2, column2) not in visited:
-#             heap.insert([matrix[row2][column2], row2, column2])
-#             visited.add((row2, column2))
-#     return result
-#
-# testMatrix = [[2, 6, 8, 10], [4, 7, 10, 12], [7, 10, 11, 14], [9, 11, 13, 15]]
-# print(findKSmallestOfSortedMatrix(testMatrix, 4))
+
+def find_kth_smallest_of_sorted_matrix(matrix, k):
+    if len(matrix) == 0 or len(matrix[0]) == 0 or k <= 0:
+        return None
+    visited = {(0, 0)}
+    heap = [(matrix[0][0], 0, 0)]
+    count = 0
+    while len(heap) > 0:
+        temp = hq.heappop(heap)
+        count += 1
+        if count == k:
+            return temp[0]
+        if (temp[1] + 1, temp[2]) not in visited:
+            hq.heappush(heap, (matrix[temp[1] + 1][temp[2]], temp[1] + 1, temp[2]))
+            visited.add((temp[1] + 1, temp[2]))
+        if (temp[1], temp[2] + 1) not in visited:
+            hq.heappush(heap, (matrix[temp[1]][temp[2] + 1], temp[1], temp[2] + 1))
+            visited.add((temp[1], temp[2] + 1))
+
+
+testMatrix = [[2, 6, 8, 10], [4, 7, 10, 12], [7, 10, 11, 14], [9, 11, 13, 15]]
+print(find_kth_smallest_of_sorted_matrix(testMatrix, 4))

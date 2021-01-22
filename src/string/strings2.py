@@ -1,289 +1,283 @@
-def reverseRecursion(text, leftIndex, rightIndex):
-    if leftIndex >= rightIndex:
-        return ''.join(text)
-    text[leftIndex], text[rightIndex] = text[rightIndex], text[leftIndex]
-    return reverseRecursion(text, leftIndex + 1, rightIndex - 1)
+from collections import defaultdict
 
 
-def reverseIteration(text):
-    if len(text) == 0:
-        return text
-    text = list(text)
-    leftBound = 0
-    rightBound = len(text) - 1
-    while leftBound < rightBound:
-        text[leftBound], text[rightBound] = text[rightBound], text[leftBound]
-        leftBound += 1
-        rightBound -= 1
-    return ''.join(text)
+def reverse_recursive(text_list, left, right):
+    if left >= right:
+        return ''.join(text_list)
+    text_list[left], text_list[right] = text_list[right], text_list[left]
+    return reverse_recursive(text_list, left + 1, right - 1)
 
 
-def reverseWordOrder(text):
-    if len(text) == 0:
-        return text
-    text = list(text)
-    startIndex = 0
+def reverse_iterative(text):
+    if not text:
+        return ""
+    text_list = list(text)
+    left = 0
+    right = len(text) - 1
+    while left < right:
+        text_list[left], text_list[right] = text_list[right], text_list[left]
+        left += 1
+        right -= 1
+    return ''.join(text_list)
+
+
+def reverse_word(text):
+    if not text:
+        return ""
+    text_list = list(text)
+    idx = 0
     while True:
-        while startIndex < len(text) and text[startIndex] == ' ':
-            startIndex += 1
-        if startIndex == len(text):
+        while idx < len(text_list) and text_list[idx] == " ":
+            idx += 1
+        if idx == len(text_list):
             break
-        endIndex = startIndex
-        while endIndex < len(text) and text[endIndex] != ' ':
-            endIndex += 1
-        reverseRecursion(text, startIndex, endIndex - 1)
-        startIndex = endIndex
-    return reverseRecursion(text, 0, len(text) - 1)
+        start = idx
+        while idx < len(text_list) and text_list[idx] != " ":
+            idx += 1
+        reverse_recursive(text_list, start, idx - 1)
+    return reverse_recursive(text_list, 0, len(text_list) - 1)
 
 
-testText1 = 'zhao yue hang'
-print(reverseRecursion(list(testText1), 0, len(testText1) - 1))
-print(reverseIteration(testText1))
-print(reverseWordOrder(testText1))
+test_text1 = 'zhao yue hang'
+print(reverse_recursive(list(test_text1), 0, len(test_text1) - 1))
+print(reverse_iterative(test_text1))
+print(reverse_word(test_text1))
 
 
-def isSame(word1, word2):
-    if len(word1) != len(word2):
-        return False
-    for index in range(len(word1)):
-        if word1[index] != word2[index]:
-            return False
-    return True
-
-
-def replacement(text, segment1, segment2):
-    if len(text) == 0 or len(segment2) == 0:
+def replacement(text, seg1, seg2):
+    if not text or not seg1 or not seg2:
         return text
-    text = list(text)
-    segment1 = list(segment1)
-    segment2 = list(segment2)
-    if len(segment1) >= len(segment2):
-        slowPointer = fastPointer = 0
-        while fastPointer < len(text):
-            if fastPointer + len(segment1) - 1 < len(text) and isSame(text[fastPointer:fastPointer + len(segment1)], segment1):
-                for index in range(len(segment2)):
-                    text[slowPointer] = segment2[index]
-                    slowPointer += 1
-                fastPointer += len(segment1)
+    text_list = list(text)
+    if len(seg1) >= len(seg2):
+        slow = fast = 0
+        while fast < len(text_list):
+            if fast <= len(text_list) - len(seg1) and text[fast:fast + len(seg1)] == seg1:
+                for letter in seg2:
+                    text_list[slow] = letter
+                    slow += 1
+                fast += len(seg1)
             else:
-                text[slowPointer], text[fastPointer] = text[fastPointer], text[slowPointer]
-                fastPointer += 1
-                slowPointer += 1
-        return ''.join(text[:slowPointer])
+                text_list[slow] = text_list[fast]
+                slow += 1
+                fast += 1
+        return ''.join(text_list[:slow])
     else:
-        index = 0
-        occurence = 0
-        while index + len(segment1) - 1 < len(text):
-            if isSame(text[index:index + len(segment1)], segment1):
-                occurence += 1
-            index += 1
-        fastPointer =len(text) - 1
-        for i in range(occurence * (len(segment2) - len(segment1))):
-            text.append(' ')
-        slowPointer = len(text) - 1
-        while fastPointer - len(segment1) + 1 >= 0:
-            if isSame(text[fastPointer - len(segment1) + 1: fastPointer + 1], segment1):
-                for index in range(len(segment2)):
-                    text[slowPointer] = segment2[len(segment2) - index - 1]
-                    slowPointer -= 1
-                fastPointer -= len(segment1)
+        count = 0
+        for i in range(len(text_list) - len(seg1) + 1):
+            if text[i:i + len(seg1)] == seg1:
+                count += 1
+        fast = len(text_list) - 1
+        text_list.extend([" "] * count * (len(seg2) - len(seg1)))
+        slow = len(text_list) - 1
+        while fast >= 0:
+            if fast >= len(seg1) - 1 and text[fast - len(seg1) + 1:fast + 1] == seg1:
+                for i in range(len(seg2)):
+                    text_list[slow] = seg2[-1 - i]
+                    slow -= 1
+                fast -= len(seg1)
             else:
-                text[slowPointer], text[fastPointer] = text[fastPointer] ,text[slowPointer]
-                slowPointer -= 1
-                fastPointer -= 1
-        return ''.join(text)
+                text_list[slow] = text_list[fast]
+                slow -= 1
+                fast -= 1
+        return ''.join(text_list)
 
-testText2 = 'my name is hang, and all my friends like hang. hang is from my father.'
-print(replacement(testText2, 'hang', 'zhaoyuehang'))
-print(replacement(testText2, 'hang', 'ZYH'))
+
+test_text2 = 'my name is hang, and all my friends like hang. hang is from my father.'
+print(replacement(test_text2, 'hang', 'zhaoyuehang'))
+print(replacement(test_text2, 'hang', 'ZYH'))
 
 
 # the length of input text is always even
-def shuffle(text, leftIndex, rightIndex):
-    if rightIndex - leftIndex + 1 < 4:
+def shuffle(text_list, left, right):
+    if right - left + 1 < 4:
         return
-    length = rightIndex - leftIndex + 1
-    startOfSubarray3 = leftIndex + length // 2
-    startOfSubarray2 = leftIndex + length // 4
-    startOfSubarray4 = startOfSubarray3 + length // 4
-    reverseRecursion(text, startOfSubarray2, startOfSubarray3 - 1)
-    reverseRecursion(text, startOfSubarray3, startOfSubarray4 - 1)
-    reverseRecursion(text, startOfSubarray2, startOfSubarray4 - 1)
-    shorterSubarrayLength = length // 4
-    shuffle(text, leftIndex, leftIndex + 2 * shorterSubarrayLength - 1)
-    shuffle(text, leftIndex + 2 * shorterSubarrayLength, rightIndex)
+    chunk1 = left
+    chunk2 = left + (right - left + 1) // 4
+    chunk3 = left + (right - left + 1) // 2
+    chunk4 = left + (right - left + 1) * 3 // 4
+    reverse_recursive(text_list, chunk2, chunk3 - 1)
+    reverse_recursive(text_list, chunk3, chunk4 - 1)
+    reverse_recursive(text_list, chunk2, chunk4 - 1)
+    shuffle(text_list, left, left + 2 * (chunk2 - chunk1) - 1)
+    shuffle(text_list, left + 2 * (chunk2 - chunk1), right)
 
-testText3 = list('abcdefg1234567')
-shuffle(testText3, 0, len(testText3) - 1)
-print(''.join(testText3))
 
-def permutationOfText(text, startIndex):
-    if len(text) == 0:
-        print(''.join(text))
+test_text3 = list('abcdefg1234567')
+shuffle(test_text3, 0, len(test_text3) - 1)
+print(''.join(test_text3))
+
+
+def permutation(text_list, cur_idx):
+    if not text_list:
         return
-    if startIndex == len(text):
-        print(''.join(text), end=' ')
+    if cur_idx == len(text_list):
+        print(''.join(text_list), end=" ")
         return
     visited = set()
-    for index in range(startIndex, len(text)):
-        if text[index] not in visited:
-            visited.add(text[index])
-            text[startIndex], text[index] = text[index], text[startIndex]
-            permutationOfText(text, startIndex + 1)
-            text[startIndex], text[index] = text[index], text[startIndex]
+    for i in range(cur_idx, len(text_list)):
+        if text_list[i] not in visited:
+            visited.add(text_list[i])
+            text_list[cur_idx], text_list[i] = text_list[i], text_list[cur_idx]
+            permutation(text_list, cur_idx + 1)
+            text_list[cur_idx], text_list[i] = text_list[i], text_list[cur_idx]
 
-testText4 = list('bacc')
-permutationOfText(testText4, 0)
+
+test_text4 = list('bacc')
+permutation(test_text4, 0)
 print()
 
-def findLongestSubstringWithKZeros(text, k):
-    if len(text) == 0 or k <= 0:
-        return None
-    leftBound = 0
-    zerosCount = 0
-    finalLeft = finalRight = -1
-    for rightBound in range(len(text)):
-        if text[rightBound] == '0':
-            if zerosCount < k:
-                zerosCount += 1
+
+def encode(text):
+    if not text:
+        return ""
+    text_list = list(text)
+    slow = fast = 1
+    single_num = 0
+    while fast < len(text_list):
+        if text_list[fast] == text_list[slow - 1]:
+            count = 1
+            while fast < len(text_list) and text_list[fast] == text_list[slow - 1]:
+                fast += 1
+                count += 1
+            num_str = str(count)
+            for letter in num_str:
+                text_list[slow] = letter
+                slow += 1
+        else:
+            single_num += 1
+            text_list[slow] = text_list[fast]
+            slow += 1
+            fast += 1
+    if single_num > len(text_list) - slow:
+        text_list.extend([""] * (single_num - (len(text_list) - slow)))
+    fast = slow - 1
+    slow = len(text_list) - 1
+    while fast >= 0:
+        if text_list[fast].isalpha() and (fast == slow - 1 or text_list[fast + 1].isalpha()):
+            text_list[slow] = "1"
+            slow -= 1
+            text_list[slow] = text_list[fast]
+            fast -= 1
+            slow -= 1
+        else:
+            text_list[slow] = text_list[fast]
+            slow -= 1
+            fast -= 1
+    return ''.join(text_list[slow + 1:])
+
+
+test_text7 = 'aaabbaacdd'
+print("encoding: ", encode(test_text7))
+
+
+def find_longest_substring_unique(text):
+    if not text:
+        return ""
+    left = 0
+    final_left = final_right = 0
+    visited = set()
+    for right in range(len(text)):
+        if text[right] not in visited:
+            visited.add(text[right])
+        else:
+            while text[left] != text[right]:
+                visited.remove(text[left])
+                left += 1
+            left += 1
+        if final_right - final_left < right - left:
+            final_left = left
+            final_right = right
+    return text[final_left:final_right + 1]
+
+
+def find_longest_substring_k(text, k):
+    if not text or k <= 0:
+        return ""
+    visited = defaultdict(int)
+    left = 0
+    final_left = final_right = 0
+    for right in range(len(text)):
+        if visited[text[right]] < k:
+            visited[text[right]] += 1
+        else:
+            while text[left] != text[right]:
+                visited[text[left]] -= 1
+                left += 1
+            left += 1
+        if final_right - final_left < right - left:
+            final_left = left
+            final_right = right
+    return text[final_left:final_right + 1]
+
+
+def find_longest_substring_kzeros(text, k):
+    if not text or k <= 0:
+        return ""
+    zero_num = 0
+    left = 0
+    final_left = final_right = 0
+    for right in range(len(text)):
+        if text[right] == "0":
+            if zero_num < k:
+                zero_num += 1
             else:
-                while text[leftBound] != '0':
-                    leftBound += 1
-                leftBound += 1
-        if rightBound - leftBound > finalRight - finalLeft:
-            finalLeft = leftBound
-            finalRight = rightBound
-    if zerosCount < k:
-        return None
-    return text[finalLeft:finalRight + 1]
+                while text[left] != "0":
+                    left += 1
+                left += 1
+        if final_right - final_left < right - left:
+            final_left = left
+            final_right = right
+    return text[final_left:final_right + 1]
 
-def findLongestSubstringWithUniqueLetter(text):
-    if len(text) == 0:
-        return text
-    hashSet = set()
-    leftBound = 0
-    finalLeft = finalRight = 0
-    for rightBound in range(len(text)):
-        if text[rightBound] not in hashSet:
-            hashSet.add(text[rightBound])
-        else:
-            while text[leftBound] != text[rightBound]:
-                hashSet.remove(text[leftBound])
-                leftBound += 1
-            leftBound += 1
-        if rightBound - leftBound > finalRight - finalLeft:
-            finalLeft = leftBound
-            finalRight = rightBound
-    return text[finalLeft:finalRight + 1]
 
-def findLongestSubstringWithKOccurrence(text, k):
-    if len(text) == 0:
-        return text
-    if k <= 0:
-        return None
-    leftBound = 0
-    hashTable = {}
-    finalLeft = finalRight = 0
-    for rightBound in range(len(text)):
-        if text[rightBound] not in hashTable:
-            hashTable[text[rightBound]] = 1
-        else:
-            if hashTable[text[rightBound]] < k:
-                hashTable[text[rightBound]] += 1
-            else:
-                while text[leftBound] != text[rightBound]:
-                    hashTable[text[leftBound]] -= 1
-                    leftBound += 1
-                leftBound += 1
-        if rightBound - leftBound > finalRight - finalLeft:
-            finalLeft = leftBound
-            finalRight = rightBound
-    return text[finalLeft:finalRight + 1]
+test_text5 = '0100101010111010101'
+print("longest k zeros: ", find_longest_substring_kzeros(test_text5, 3))
+test_text6 = 'abcdebfghijklmn'
+print("longest unique: ", find_longest_substring_unique(test_text6))
+print("longest k times: ", find_longest_substring_k(test_text5, 2))
 
-testText5 = '0100101010111010101'
-print(findLongestSubstringWithKZeros(testText5, 3))
-testText6 = 'abcdebfghijklmn'
-print(findLongestSubstringWithUniqueLetter(testText6))
-print(findLongestSubstringWithKOccurrence(testText5, 2))
 
-def isNumber(letter):
-    if ord(letter) >= ord('0') and ord(letter) <= ord('9'):
-        return True
-    return False
-def encodeString(text):
-    if len(text) == 0:
-        return text
-    text = list(text)
-    slowPointer = fastPointer = 0
-    numberOfSingleLetter = 0
-    while fastPointer < len(text):
-        text[slowPointer] = text[fastPointer]
-        slowPointer += 1
-        numOfReplica = 0
-        while fastPointer < len(text) and text[fastPointer] == text[slowPointer - 1]:
-            numOfReplica += 1
-            fastPointer += 1
-        if numOfReplica > 1:
-            text[slowPointer] = str(numOfReplica)
-            slowPointer += 1
-        else:
-            numberOfSingleLetter += 1
-    fastPointer = slowPointer - 1
-    for i in range(numberOfSingleLetter):
-        text.append(' ')
-    slowPointer = len(text) - 1
-    while fastPointer >= 0:
-        if isNumber(text[fastPointer]):
-            text[slowPointer] = text[fastPointer]
-            fastPointer -= 1
-            slowPointer -= 1
-        else:
-            text[slowPointer] = '1'
-            slowPointer -= 1
-        text[slowPointer] = text[fastPointer]
-        slowPointer -= 1
-        fastPointer -= 1
-    return ''.join(text[slowPointer + 1 :])
+def find_anagram(text, segment):
+    if not text or not segment or len(segment) > len(text):
+        return []
+    # complete dictionary
+    remain = defaultdict(int)
+    for letter in segment:
+        remain[letter] += 1
+    unique_length = len(remain)
+    # check first len(segment) elements
+    left = 0
+    right = len(segment) - 1
+    result = []
+    for i in range(left, right + 1):
+        if text[i] in remain:
+            remain[text[i]] -= 1
+            if remain[text[i]] == 0:
+                unique_length -= 1
+    if unique_length == 0:
+        result.append(text[left:right + 1])
+    left += 1
+    right += 1
+    # check rest elements
+    while right < len(text):
+        # move left
+        if text[left - 1] in remain:
+            remain[text[left - 1]] += 1
+            if remain[text[left - 1]] == 1:
+                unique_length += 1
+        # remove right
+        if text[right] in remain:
+            remain[text[right]] -= 1
+            if remain[text[right]] == 0:
+                unique_length -= 1
+        if unique_length == 0:
+            result.append(text[left:right + 1])
+        left += 1
+        right += 1
+    return result
 
-testText7 = 'aaabbaacdd'
-print(encodeString(testText7))
 
-def findAnagram(text, segment):
-    if len(text) == 0 or len(segment) == 0 or len(segment) > len(text):
-        return
-    hashTable = {}
-    for index in range(len(segment)):
-        if segment[index] not in hashTable:
-            hashTable[segment[index]] = 1
-        else:
-            hashTable[segment[index]] += 1
-    leftBound = 0
-    rightBound = len(segment) - 1
-    lettersLeft = len(hashTable)
-    for index in range(len(segment)):
-        if text[index] in hashTable:
-            hashTable[text[index]] -= 1
-            if hashTable[text[index]] == 0:
-                lettersLeft -= 1
-    if lettersLeft == 0:
-        print(text[leftBound:rightBound + 1])
-    leftBound += 1
-    rightBound += 1
-    while rightBound < len(text):
-        if text[leftBound - 1] in hashTable:
-            if hashTable[text[leftBound - 1]] == 0:
-                lettersLeft += 1
-            hashTable[text[leftBound - 1]] += 1
-        if text[rightBound] in hashTable:
-            hashTable[text[rightBound]] -= 1
-            if hashTable[text[rightBound]] == 0:
-                lettersLeft -= 1
-        if lettersLeft == 0:
-            print(text[leftBound:rightBound + 1])
-        leftBound += 1
-        rightBound += 1
-
-testText8 = 'aabcbaa'
+test_text8 = 'aabcbaa'
 segment = 'aab'
-findAnagram(testText8, segment)
+print("find anagram: ", find_anagram(test_text8, segment))
 

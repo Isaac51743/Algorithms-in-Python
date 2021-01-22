@@ -1,3 +1,4 @@
+# 1/15/2021
 def char_removal1(text, char_set):
     if len(text) == 0:
         return ''
@@ -26,100 +27,112 @@ def char_removal2(text, char_set):
             right -= 1
     return ''.join(text_list[:left])
 
-def spaceRemoval(text):
-    if len(text) == 0:
-        return None
-    text = list(text)
-    slowPointer = fastPointer = 0
-    wordsNum = 0
+
+def space_removal(text):
+    if not text:
+        return ""
+    text_list = list(text)
+    slow = fast = 0
+    word_count = 0
     while True:
-        while fastPointer < len(text) and text[fastPointer] == ' ':
-            fastPointer += 1
-        if fastPointer == len(text):
+        while fast < len(text_list) and text_list[fast] == " ":
+            fast += 1
+        if fast == len(text_list):
             break
-        if wordsNum > 0:
-            text[slowPointer] = ' '
-            slowPointer += 1
-        while fastPointer < len(text) and text[fastPointer] != ' ':
-            text[slowPointer], text[fastPointer] = text[fastPointer], text[slowPointer]
-            slowPointer += 1
-            fastPointer += 1
-        wordsNum += 1
-    return ''.join(text[:slowPointer])
+        if word_count > 0:
+            text_list[slow] = " "
+            slow += 1
+        while fast < len(text_list) and text_list[fast] != " ":
+            text_list[slow] = text_list[fast]
+            slow += 1
+            fast += 1
+        word_count += 1
+    return ''.join(text_list[:slow])
 
 
-testText1 = '   zhaoyuehang is a     handsome man  '
-print(char_removal1(testText1, {'a', 'o'}))
-print(char_removal2(testText1, {'a', 'o'}))
-print(spaceRemoval(testText1))
+test_text1 = '   zhaoyuehang is a     handsome man  '
+print(char_removal1(test_text1, {'a', 'o'}))
+print(char_removal2(test_text1, {'a', 'o'}))
+print(space_removal(test_text1))
 
 
 def deduplication(text):
-    if len(text) <= 1:
+    if not text or len(text) == 1:
         return text
-    text = list(text)
-    slowPointer = 1
-    for fastPointer in range(1, len(text)):
-        if text[fastPointer] != text[slowPointer - 1]:
-            text[fastPointer], text[slowPointer] = text[slowPointer], text[fastPointer]
-            slowPointer += 1
-    return ''.join(text[:slowPointer])
+    t_list = list(text)
+    slow = 1
+    for fast in range(1, len(t_list)):
+        if t_list[fast] != t_list[slow - 1]:
+            t_list[slow] = t_list[fast]
+            slow += 1
+    return ''.join(t_list[:slow])
 
 
-def deleteContiguousSameLetter(text):
-    if len(text) <= 1:
+def duduplication(text):
+    if not text or len(text) == 1:
         return text
-    text = list(text)
-    stackTop = -1
-    index = 0
-    while index < len(text):
-        if stackTop < 0 or text[stackTop] != text[index]:
-            stackTop += 1
-            text[stackTop], text[index] = text[index], text[stackTop]
-            index += 1
+    t_list = list(text)
+    slow = fast = 1
+    while fast < len(t_list):
+        while fast < len(t_list) and t_list[fast] == t_list[slow - 1]:
+            fast += 1
+        if fast == len(t_list):
+            break
+        t_list[slow] = t_list[fast]
+        slow += 1
+        fast += 1
+    return ''.join(t_list)
+
+
+def deduplication_re(text):
+    if not text or len(text) == 1:
+        return text
+    stack_top = 0
+    t_list = list(text)
+    i = 1
+    while i < len(t_list):
+        if stack_top >= 0 and t_list[i] == t_list[stack_top]:
+            while i < len(t_list) and t_list[i] == t_list[stack_top]:
+                i += 1
+            stack_top -= 1
         else:
-            while index < len(text) and text[index] == text[stackTop]:
-                index += 1
-            stackTop -= 1
-    return ''.join(text[:stackTop + 1])
+            stack_top += 1
+            t_list[stack_top] = t_list[i]
+            i += 1
+    return ''.join(t_list[:stack_top + 1])
 
 
-testText2 = 'thissss messsege     hasss nnno dduppllicatttion'
-print(deduplication(testText2))
-testText3 = 'zbbccccbbyeeeehee'
-print(deleteContiguousSameLetter(testText3))
+test_text2 = 'thissss messsege     hasss nnno dduppllicatttion'
+print(deduplication(test_text2))
+test_text3 = 'zbbccccbbyeeeehee'
+print(deduplication_re(test_text3))
 
 
-def orderOfLetter(letter):
-    return ord(letter) - ord('a') + 1
+def my_hash(text, start, end, hash_val):
+    return (hash_val - (ord(text[start - 1]) - ord("a"))) // 26 + (ord(text[end]) - ord("a")) * 26 ** (end - start)
 
 
 # assuming lower case letter
-def findSubString(text, segment):
-    if len(text) == 0 or len(segment) == 0 or len(segment) > len(text):
-        return None
-    text = list(text)
-    segment = list(segment)
-    segmentHashValue = 0
-    textHashValue = 0
-    for index in range(len(segment)):
-        textHashValue = textHashValue + 26 ** index * orderOfLetter(text[index])
-        segmentHashValue = segmentHashValue + 26 ** index * orderOfLetter(segment[index])
-    startIndex = 0
-    endIndex = len(segment) - 1
-    position = []
-    while endIndex < len(text):
-        if startIndex > 0:
-            textHashValue = (textHashValue - orderOfLetter(text[startIndex - 1])) // 26 + orderOfLetter(text[endIndex]) * 26 ** (len(segment) - 1)
-        if textHashValue == segmentHashValue:
-            position.append(startIndex)
-        startIndex += 1
-        endIndex += 1
-    return position
+def find_substring(text, seg):
+    if not text or not seg or len(text) < len(segment):
+        return []
+    hash_val = 0
+    target_val = 0
+    for i in range(len(seg)):
+        hash_val += (ord(text[i]) - ord("a")) * 26 ** i
+        target_val += (ord(seg[i]) - ord("a")) * 26 ** i
+    result = []
+    if hash_val == target_val:
+        result.append(0)
+    for i in range(1, len(text) - len(seg) + 1):
+        hash_val = my_hash(text, i, i + len(seg) - 1, hash_val)
+        if hash_val == target_val:
+            result.append(i)
+    return result
 
 
 testText4 = 'hzabcbchooifahabcbcfoinabcbce'
 segment = 'abcbc'
-print(findSubString(testText4, segment))
+print(find_substring(testText4, segment))
 
 

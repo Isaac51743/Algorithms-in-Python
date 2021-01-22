@@ -19,9 +19,9 @@ def number_different_bits(number1, number2):
     xor = number1 ^ number2
     count = 0
     while xor > 0:
-        xor = xor >> 1
         if xor & 1 == 1:
             count += 1
+        xor = xor >> 1
     return count
 
 
@@ -71,7 +71,7 @@ def hexadecimal_representation(number):
 testNumber = 1
 print(set_kth_bit_to(testNumber, 3, 1))
 print(is_power_to_2(16))
-print(number_different_bits(1, 7))
+print(number_different_bits(1, 2))
 print(is_letter_unique('.sfaeg'))
 print(reverse_every_bit(5))
 print(hexadecimal_representation(100))

@@ -20,7 +20,7 @@ def bfs1(root):
         print()
 
 
-bfs1(t.test_root3)
+# bfs1(t.test_root3)
 
 
 def is_bipartite(root):
@@ -83,7 +83,7 @@ def is_complete_tree(root):
     return True
 
 
-print(is_complete_tree(t.test_root3))
+# print(is_complete_tree(t.test_root3))
 
 
 def find_kth_smallest_of_sorted_matrix(matrix, k):
@@ -106,4 +106,4 @@ def find_kth_smallest_of_sorted_matrix(matrix, k):
 
 
 testMatrix = [[2, 6, 8, 10], [4, 7, 10, 12], [7, 10, 11, 14], [9, 11, 13, 15]]
-print(find_kth_smallest_of_sorted_matrix(testMatrix, 4))
+# print(find_kth_smallest_of_sorted_matrix(testMatrix, 4))

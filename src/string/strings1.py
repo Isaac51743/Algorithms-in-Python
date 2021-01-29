@@ -68,7 +68,7 @@ def deduplication(text):
     return ''.join(t_list[:slow])
 
 
-def duduplication(text):
+def deduplication(text):
     if not text or len(text) == 1:
         return text
     t_list = list(text)

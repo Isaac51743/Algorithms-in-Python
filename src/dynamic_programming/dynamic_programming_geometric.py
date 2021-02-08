@@ -1,275 +1,217 @@
-def findLongestContiguous1(zeroOneArray):
-    if len(zeroOneArray) == 0:
-        return None
-    result = [zeroOneArray[0]]
-    finalLeft = finalRight = 0
-    temporaryLeft = 0 if zeroOneArray[0] == 1 else 1
-    longestLength = zeroOneArray[0]
-    for index in range(1, len(zeroOneArray)):
-        if zeroOneArray[index] == 1:
-            result.append(result[-1] + 1)
+def longest_1(array):
+    if not array:
+        return 0
+    m = [array[0]]
+    max_length = m[-1]
+    left = 0 if array[0] else 1
+    final_left = final_right = -1
+    for idx in range(1, len(array)):
+        if array[idx]:
+            m.append(m[-1] + 1)
+            if max_length < m[-1]:
+                max_length = m[-1]
+                final_left = left
+                final_right = idx
         else:
-            result.append(0)
-            temporaryLeft = index + 1
-        if result[-1] > longestLength:
-            longestLength = result[-1]
-            finalLeft = temporaryLeft
-            finalRight = index
-    return (longestLength, finalLeft, finalRight)
+            m.append(0)
+            left = idx + 1
+    return max_length, final_left, final_right
 
-testArray1 = [1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0 ,0, 0]
-print(findLongestContiguous1(testArray1))
-# -----------------------------------------------------------------------------------
-def maxStorageOfWater(array):
-    if len(array) <= 1:
+
+test_array1 = [1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0 ,0, 0]
+print(longest_1(test_array1))
+
+
+def max_storage_water(array):
+    if not array:
         return 0
-    # find vertex
-    vertex = []
-    index = 0
-    while True:
-        # up
-        while index < len(array) - 1 and array[index] <= array[index + 1]:
-            index += 1
-        vertex.append(index)
-        if index == len(array) - 1:
-            break
-        # down
-        while index < len(array) - 1 and array[index] > array[index + 1]:
-            index += 1
-        if index == len(array) - 1:
-            break
-    if len(vertex) <= 1:
-        return 0
-    print(vertex)
-    # find vertex in vertex
-    vertexOfVertex = []
-    index = 0
-    while True:
-        while index < len(vertex) - 1 and array[index] <= array[index + 1]:
-            index += 1
-        vertexOfVertex.append(index)
-        if index == len(vertex) - 1:
-            break
-        while index < len(vertex) - 1 and array[index] > array[index + 1]:
-            index += 1
-        if index == len(vertex) - 1:
-            break
-    print(vertexOfVertex)
-    if len(vertexOfVertex) > 1:
-        newVertex = []
-        for index in range(vertexOfVertex[0]):
-            newVertex.append(vertex[index])
-        for index in vertexOfVertex:
-            newVertex.append(vertex[index])
-        for index in range(vertexOfVertex[-1] + 1, len(vertex)):
-            newVertex.append(vertex[index])
-    else:
-        newVertex = vertex
+    left_based = [array[0]]
+    right_based = [array[-1]]
+    for idx in range(1, len(array)):
+        left_based.append(max(left_based[-1], array[idx]))
+        right_based.append(max(right_based[-1], array[-1 - idx]))
+    right_based.reverse()
     storage = 0
-    for leftBound in range(len(newVertex) - 1):
-        for index in range(newVertex[leftBound] + 1, newVertex[leftBound + 1]):
-            if array[index] < min(array[newVertex[leftBound]], array[newVertex[leftBound + 1]]):
-                storage += min(array[newVertex[leftBound]], array[newVertex[leftBound + 1]]) - array[index]
+    for idx in range(len(array)):
+        storage += min(left_based[idx], right_based[idx]) - array[idx]
     return storage
 
+
 fence1 = [5, -1, 2, -1, 5, 5]
-print(maxStorageOfWater(fence1))
-# -----------------------------------------------------------------------------------
-def matrixPrint(matrix):
+print(max_storage_water(fence1))
+
+
+def matrix_print(matrix):
     for row in range(len(matrix)):
         for column in range(len(matrix[0])):
             print(matrix[row][column], end=' ')
         print()
 
-def findLargestCross(matrix):
-    if len(matrix) == 0 or len(matrix[0]) == 0:
-        return None
-    leftArm = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    rightArm = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    topArm = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    downArm = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    for index1 in range(len(matrix)):
-        row = index1
-        leftArm[row][0] = matrix[row][0]
-        for index2 in range(1, len(matrix[0])):
-            column = index2
-            if matrix[row][column] == 0:
-                leftArm[row][column] = 0
-            else:
-                leftArm[row][column] = leftArm[row][column - 1] + 1
-    for index1 in range(len(matrix)):
-        row = index1
-        leftArm[row][len(matrix[0]) - 1] = matrix[row][len(matrix[0]) - 1]
-        for index2 in range(1, len(matrix[0])):
-            column = len(matrix[0]) - 1 - index2
-            if matrix[row][column] == 0:
-                rightArm[row][column] = 0
-            else:
-                rightArm[row][column] = rightArm[row][column + 1] + 1
-    for index1 in range(len(matrix[0])):
-        column = index1
-        topArm[0][column] = matrix[0][column]
-        for index2 in range(1, len(matrix)):
-            row = index2
-            if matrix[row][column] == 0:
-                topArm[row][column] = 0
-            else:
-                topArm[row][column] = topArm[row - 1][column] + 1
-    for index1 in range(len(matrix[0])):
-        column = index1
-        downArm[len(matrix) - 1][column] = matrix[len(matrix) - 1][column]
-        for index2 in range(1, len(matrix)):
-            row = len(matrix) - 1 - index2
-            if matrix[row][column] == 0:
-                downArm[row][column] = 0
-            else:
-                downArm[row][column] = downArm[row + 1][column] + 1
-    globalMaxArmLength = -1
-    finalRow = finalColumn = -1
-    for row in range(len(matrix)):
-        for column in range(len(matrix[0])):
-            minArm = min(leftArm[row][column], rightArm[row][column], topArm[row][column], downArm[row][column]) - 1
-            if globalMaxArmLength < minArm:
-                globalMaxArmLength = minArm
-                finalRow = row
-                finalColumn = column
-    return (globalMaxArmLength, finalRow, finalColumn)
 
-testMatrix1 = [[0 for _ in range(10)] for _ in range(10)]
+def find_largest_cross(matrix):
+    if not matrix or not matrix[0]:
+        return -1, -1, -1
+    left_arm = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    right_arm = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    top_arm = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    bottom_arm = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    for row in range(len(matrix)):
+        left_arm[row][0] = matrix[row][0]
+        right_arm[row][-1] = matrix[row][-1]
+        for idx in range(1, len(matrix[0])):
+            if matrix[row][idx]:
+                left_arm[row][idx] = left_arm[row][idx - 1] + 1
+            else:
+                left_arm[row][idx] = 0
+            if matrix[row][-1 - idx]:
+                right_arm[row][-1 - idx] = right_arm[row][-idx] + 1
+            else:
+                right_arm[row][-1 - idx] = 0
+    for col in range(len(matrix[0])):
+        top_arm[0][col] = matrix[0][col]
+        bottom_arm[-1][col] = matrix[-1][col]
+        for idx in range(1, len(matrix)):
+            if matrix[idx][col]:
+                top_arm[idx][col] = top_arm[idx - 1][col] + 1
+            else:
+                top_arm[idx][col] = 0
+            if matrix[-1 - idx][col]:
+                bottom_arm[-1 - idx][col] = bottom_arm[-idx][col] + 1
+            else:
+                bottom_arm[-1 - idx][col] = 0
+    final_row = final_col = -1
+    max_arm = 0
+    for row in range(len(matrix)):
+        for col in range(len(matrix[0])):
+            if min(left_arm[row][col], right_arm[row][col], top_arm[row][col], bottom_arm[row][col]) > max_arm:
+                final_row = row
+                final_col = col
+                max_arm = min(left_arm[row][col], right_arm[row][col], top_arm[row][col], bottom_arm[row][col])
+    return max_arm - 1, final_row, final_col
+
+
+test_matrix1 = [[0 for _ in range(10)] for _ in range(10)]
 for row in range(5):
-    testMatrix1[row][5//2] = 1
+    test_matrix1[row][5//2] = 1
 for column in range(5):
-    testMatrix1[5//2][column] = 1
-matrixPrint(testMatrix1)
-print(findLargestCross(testMatrix1))
-# -----------------------------------------------------------------------------------
-def findLargestSquareSurroundedByOne(matrix):
-    if len(matrix) == 0 or len(matrix[0]) == 0:
-        return None
-    leftToRight = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    rightToLeft = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    topToBottom = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    bottomToTop = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    # topLeftCorner = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    # bottomRightCorner = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    for index1 in range(len(matrix)):
-        row = index1
-        leftToRight[row][0] = matrix[row][0]
-        for index2 in range(1, len(matrix[0])):
-            column = index2
-            if matrix[row][column] == 0:
-                leftToRight[row][column] = 0
-            else:
-                leftToRight[row][column] = leftToRight[row][column - 1] + 1
-    for index1 in range(len(matrix)):
-        row = index1
-        rightToLeft[row][len(matrix[0]) - 1] = matrix[row][len(matrix[0]) - 1]
-        for index2 in range(1, len(matrix[0])):
-            column = len(matrix[0]) - 1 - index2
-            if matrix[row][column] == 0:
-                rightToLeft[row][column] = 0
-            else:
-                rightToLeft[row][column] = rightToLeft[row][column + 1] + 1
-    for index1 in range(len(matrix[0])):
-        column = index1
-        topToBottom[0][column] = matrix[0][column]
-        for index2 in range(1, len(matrix)):
-            row = index2
-            if matrix[row][column] == 0:
-                topToBottom[row][column] = 0
-            else:
-                topToBottom[row][column] = topToBottom[row - 1][column] + 1
-    for index1 in range(len(matrix[0])):
-        column = index1
-        bottomToTop[len(matrix) - 1][column] = matrix[len(matrix) - 1][column]
-        for index2 in range(1, len(matrix)):
-            row = len(matrix) - 1 - index2
-            if matrix[row][column] == 0:
-                bottomToTop[row][column] = 0
-            else:
-                bottomToTop[row][column] = bottomToTop[row + 1][column] + 1
-    globalMaxEdgeLength = 0
-    finalRow = finalColumn = -1
+    test_matrix1[5//2][column] = 1
+matrix_print(test_matrix1)
+print(find_largest_cross(test_matrix1))
+
+
+def find_largest_hollow_square(matrix):
+    if not matrix or not matrix[0]:
+        return -1, -1, -1
+    top_bound = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    bottom_bound = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    left_bound = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    right_bound = [[0] * len(matrix[0]) for _ in range(len(matrix))]
     for row in range(len(matrix)):
-        for column in range(len(matrix[0])):
-            lengthOfTopLeftEdges = min(rightToLeft[row][column], bottomToTop[row][column])
-            for i in range(lengthOfTopLeftEdges):
-                edgeLength = lengthOfTopLeftEdges - i
-                rowOfBottomRightCorner = row + edgeLength - 1
-                columnOfBottomRightCorner = column + edgeLength - 1
-                if rowOfBottomRightCorner < len(matrix) and columnOfBottomRightCorner < len(matrix[0]):
-                    bottomRightEdgeLength = min(leftToRight[rowOfBottomRightCorner][columnOfBottomRightCorner], topToBottom[rowOfBottomRightCorner][columnOfBottomRightCorner])
-                    if bottomRightEdgeLength >= edgeLength and edgeLength > globalMaxEdgeLength:
-                        globalMaxEdgeLength = edgeLength
-                        finalRow = row
-                        finalColumn = column
-                        break
-    return (globalMaxEdgeLength, finalRow, finalColumn)
+        top_bound[row][-1] = matrix[row][-1]
+        bottom_bound[row][0] = matrix[row][0]
+        for idx in range(1, len(matrix[0])):
+            if matrix[row][-1 - idx]:
+                top_bound[row][-1 - idx] = top_bound[row][-idx] + 1
+            else:
+                top_bound[row][-1 - idx] = 0
+            if matrix[row][idx]:
+                bottom_bound[row][idx] = bottom_bound[row][idx - 1] + 1
+            else:
+                bottom_bound[row][idx] = 0
+    for col in range(len(matrix[0])):
+        left_bound[-1][col] = matrix[-1][col]
+        right_bound[0][col] = matrix[0][col]
+        for idx in range(1, len(matrix)):
+            if matrix[-1 - idx][col]:
+                left_bound[-1 - idx][col] = left_bound[-idx][col] + 1
+            else:
+                left_bound[-1 - idx][col] = 0
+            if matrix[idx][col]:
+                right_bound[idx][col] = right_bound[idx - 1][col] + 1
+            else:
+                right_bound[idx][col] = 0
+    max_length = 0
+    row_top_left = col_top_left = -1
+    for row in range(len(matrix)):
+        for col in range(len(matrix[0])):
+            for shift in range(min(len(matrix) - 1 - row, len(matrix[0]) - 1 - col, min(left_bound[row][col], top_bound[row][col]) - 1), -1, -1):
+                if max_length < shift + 1 <= min(bottom_bound[row + shift][col + shift], right_bound[row + shift][col + shift]):
+                    max_length = shift + 1
+                    row_top_left = row
+                    col_top_left = col
+                    break
+    return max_length, row_top_left, col_top_left
 
-testMatrix2 = [[0 for _ in range(10)] for _ in range(10)]
+
+test_matrix2 = [[0 for _ in range(10)] for _ in range(10)]
 for i in range(4):
-    testMatrix2[1][1 + i] = 1
+    test_matrix2[1][1 + i] = 1
 for i in range(4):
-    testMatrix2[4][1 + i] = 1
+    test_matrix2[4][1 + i] = 1
 for i in range(4):
-    testMatrix2[1 + i][1] = 1
+    test_matrix2[1 + i][1] = 1
 for i in range(4):
-    testMatrix2[1 + i][4] = 1
-matrixPrint(testMatrix2)
-print(findLargestSquareSurroundedByOne(testMatrix2))
-# -----------------------------------------------------------------------------------
-def pathPrefixOfArray(array):
-    if len(array) == 0:
-        return None
-    for index in range(1, len(array)):
-        array[index] = array[index - 1] + array[index]
-    return array
-def getSumOfSubarray(pathPrefixArray, leftIndex, rightIndex):
-    if len(pathPrefixArray) == 0 or leftIndex > rightIndex:
-        print('invalid parameter')
+    test_matrix2[1 + i][4] = 1
+matrix_print(test_matrix2)
+print(find_largest_hollow_square(test_matrix2))
+
+
+def path_prefix(array):
+    if not array:
+        return []
+    m = [array[0]]
+    for idx in range(1, len(array)):
+        m.append(m[-1] + array[idx])
+    return m
+
+
+def sum_subarray(path_prefix, start_idx, end_idx):
+    if not path_prefix or start_idx > end_idx or start_idx < 0 or end_idx >= len(path_prefix):
+        print("invalid input!")
         return -1
-    if leftIndex == 0:
-        return pathPrefixArray[rightIndex]
-    return pathPrefixArray[rightIndex] - pathPrefixArray[leftIndex - 1]
+    if start_idx == 0:
+        return path_prefix[end_idx]
+    return path_prefix[end_idx] - path_prefix[start_idx - 1]
 
-testArray2 = [1, 2, 4, 2, 14, 23, 5, 3]
-print(getSumOfSubarray(pathPrefixOfArray(testArray2), 2, 5))
-# -----------------------------------------------------------------------------------
-def findLargestSumOfSubmatrix(matrix):
-    if len(matrix) == 0 or len(matrix[0]) == 0:
+
+test_array2 = [1, 2, 4, 2, 14, 23, 5, 3]
+print("path prefix: ", sum_subarray(path_prefix(test_array2), 2, 5))
+
+
+def find_largest_submatrix(matrix):
+    if not matrix or not matrix[0]:
         return None
-    result = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
-    result[0][0] = matrix[0][0]
-    for column in range(1, len(matrix[0])):
-        result[0][column] = result[0][column - 1] + matrix[0][column]
+    m = [[0] * len(matrix[0]) for _ in range(len(matrix))]
+    m[0][0] = matrix[0][0]
+    for col in range(1, len(matrix[0])):
+        m[0][col] = m[0][col - 1] + matrix[0][col]
     for row in range(1, len(matrix)):
-        result[row][0] = result[row - 1][0] + matrix[row][0]
-    for row in range(1, len(matrix)):
-        for column in range(1, len(matrix[0])):
-            result[row][column] = result[row - 1][column] + result[row][column - 1] - result[row - 1][column - 1] + matrix[row][column]
-    maxSum = float('-inf')
-    matrixPrint(result)
-    print(maxSum)
-    finalTopLeft = finalBottomRight = None
-    for rowStart in range(len(matrix)):
-        for rowEnd in range(rowStart, len(matrix)):
-            for columnStart in range(len(matrix[0])):
-                for columnEnd in range(columnStart, len(matrix[0])):
-                    if rowStart == 0 and columnStart == 0:
-                        temporarySum = result[rowEnd][columnEnd]
-                    elif rowStart == 0:
-                        temporarySum = result[rowEnd][columnEnd] - result[rowEnd][columnStart - 1]
-                    elif columnStart == 0:
-                        temporarySum = result[rowEnd][columnEnd] - result[rowStart - 1][columnEnd]
-                    else:
-                        temporarySum = result[rowEnd][columnEnd] - result[rowStart - 1][columnEnd] - result[rowEnd][columnStart - 1] + result[rowStart - 1][columnStart - 1]
-                    if maxSum < temporarySum:
-                        maxSum = temporarySum
-                        finalTopLeft = (rowStart, columnStart)
-                        finalBottomRight = (columnEnd, columnEnd)
-    return (maxSum, finalTopLeft, finalBottomRight)
+        m[row][0] = m[row - 1][0] + matrix[row][0]
+    for row in  range(1, len(matrix)):
+        for col in range(1, len(matrix[0])):
+            m[row][col] = matrix[row][col] + m[row - 1][col] + m[row][col - 1] - m[row - 1][col - 1]
+    max_sum = float("-inf")
+    # matrix_print(m)
+    top_left = bottom_right = None
+    for row_start in range(len(matrix)):
+        for row_end in range(row_start, len(matrix)):
+            for col_start in range(len(matrix[0])):
+                for col_end in range(col_start, len(matrix[0])):
+                    temp_sum = m[row_end][col_end]
+                    if row_start > 0:
+                        temp_sum -= m[row_start - 1][col_end]
+                    if col_start > 0:
+                        temp_sum -= m[row_end][col_start - 1]
+                    if row_start > 0 and col_start > 0:
+                        temp_sum += m[row_start - 1][col_start - 1]
+                    if max_sum < temp_sum:
+                        top_left = (row_start, col_start)
+                        bottom_right = (row_end, col_end)
+                        max_sum = temp_sum
+    return max_sum, top_left, bottom_right
 
-testMatrix3 = ([[1, 1, 1, -100, 2, 1, 1, 1, 1, 1],
+
+test_matrix3 = ([[1, 1, 1, -100, 2, 1, 1, 1, 1, 1],
                         [1, 1, 1, 1, 1, 1, 1, 1, 99, 1],
                         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                         [1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
@@ -279,5 +221,5 @@ testMatrix3 = ([[1, 1, 1, -100, 2, 1, 1, 1, 1, 1],
                         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                         [1, 1, 1,  -100, 1, 1, 1, 1, 1, 1]])
-print(findLargestSumOfSubmatrix(testMatrix3))
+print(find_largest_submatrix(test_matrix3))
 

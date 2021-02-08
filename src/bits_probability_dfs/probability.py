@@ -1,107 +1,118 @@
-import random as R
-import heap as H
-print('Probability:')
+import random as r
+import heapq as hq
+
 
 def shuffle_poker(array):
     if len(array) != 52:
-        print('invalid array')
         return
-    for index in range(len(array)):
-        randomIndex = R.randint(index, len(array) - 1)
-        array[index], array[randomIndex] = array[randomIndex], array[index]
-testArray = [i for i in range(52)]
-shuffle_poker(testArray)
-print(testArray)
-# -----------------------------------------------------------------------------------
-def getRandomElementInFlow(input, timeIndex):
-    if R.randint(0, timeIndex) == 0:
-        global randomElement
-        randomElement = input
+    for idx in range(52):
+        random_idx = r.randint(idx, 51)
+        array[idx], array[random_idx] = array[random_idx], array[idx]
 
-def getRandomKElementInFlow(input, timeIndex, k):
-    randomIndex = R.randint(0, timeIndex)
-    if randomIndex < k:
-        global randomKElement
-        randomKElement[randomIndex] = input
 
-testFlow1 = [1, 3, 9, 5, 2, 7, 12, 21, 8, 6]
-randomElement = None
-for index, value in enumerate(testFlow1):
-    getRandomElementInFlow(value, index)
-    print(randomElement, end=' ')
+test_array = [i for i in range(52)]
+shuffle_poker(test_array)
+print(test_array)
+
+
+def get_random_in_flow(input, time):
+    if r.randint(0, time) == 0:
+        global random_element
+        random_element = input
+
+
+def get_randomk_in_flow(input, time, k, random_k):
+    if time < k:
+        random_k.append(input)
+    else:
+        random_idx = r.randint(0, time)
+        if random_idx < k:
+            random_k[random_idx] = input
+
+
+test_flow1 = [1, 3, 9, 5, 2, 7, 12, 21, 8, 6]
+random_element = None
+for index, value in enumerate(test_flow1):
+    get_random_in_flow(value, index)
+    print(random_element, end=' ')
 print()
 
 k = 3
-randomKElement = testFlow1[:k]
-for index in range(k, len(testFlow1)):
-    getRandomKElementInFlow(testFlow1[index], index, k)
-    print(randomKElement, end=' ')
+random_k = []
+for index in range(len(test_flow1)):
+    get_randomk_in_flow(test_flow1[index], index, k, random_k)
+    print(random_k, end=' ')
 print()
-# -----------------------------------------------------------------------------------
-indexOfLargestElement = []
-largestElement = None
-def getRandomIndexOfLargestElement(input, timeIndex):
-    global indexOfLargestElement, largestElement, randomIndexOfLargestElement
-    if largestElement == None:
-        indexOfLargestElement.append(timeIndex)
-        largestElement = input
-    elif input == largestElement:
-        indexOfLargestElement.append(timeIndex)
-    elif input > largestElement:
-        indexOfLargestElement = [timeIndex]
-        largestElement = input
-    randomIndexOfLargestElement = indexOfLargestElement[R.randint(0, len(indexOfLargestElement) - 1)]
 
-randomIndexOfLargestElement = -1
-testFlow2 = [1, 3, 9, 5, 2, 3, 9, 2, 9, 2]
-for index, value in enumerate(testFlow2):
-    getRandomIndexOfLargestElement(value, index)
-    print(randomIndexOfLargestElement, end=' ')
+
+def random_largest(input, time):
+    global largest,counter, largest_idx
+    if input == largest:
+        counter += 1
+        if r.randint(1, counter) == 1:
+            largest_idx = time
+    elif input > largest:
+        largest = input
+        counter = 1
+        largest_idx = time
+
+
+largest_idx = -1
+counter = 0
+largest = float("-inf")
+test_flow2 = [1, 3, 9, 5, 2, 3, 9, 2, 9, 2]
+for index, value in enumerate(test_flow2):
+    random_largest(value, index)
+    print(largest_idx, end=' ')
 print()
-# -----------------------------------------------------------------------------------
-def generatorWithSize5():
-    randomNumber = R.randint(0, 7)
-    while randomNumber > 4:
-        randomNumber = R.randint(0, 7)
-    return randomNumber
 
-def generatorWithSize7():
-    row = R.randint(0, 5)
-    column = R.randint(0, 5)
-    while row * 5 + column >= (4 * 5 + 4) // 7 * 7:
-        row = R.randint(0, 5)
-        column = R.randint(0, 5)
-    return (row * 5 + column) % 7
+
+def random_5():
+    result = r.randint(0, 6)
+    while result >= 5:
+        result = r.randint(0, 6)
+    return result
+
+
+def random_7():
+    result = 0
+    for i in range(2):
+        result = result * 5 + r.randint(0, 4)
+    while result >= (25 // 7 * 7):
+        result = 0
+        for i in range(2):
+            result = result * 5 + r.randint(0, 4)
+    return result % 7
+
 
 for i in range(10):
-    print(generatorWithSize5(), end=' ')
-print()
+    print(random_5(), end=' ')
+print("random 5 based on random 7")
 for i in range(10):
-    print(generatorWithSize7(), end=' ')
-print()
-# -----------------------------------------------------------------------------------
-smallerHeap = H.Heap()
-biggerHeap = H.Heap()
-def getMedianOfFlow(input):
-    if smallerHeap.getSize() == 0:
-        smallerHeap.insert(-1 * input)
-    elif smallerHeap.getSize() > biggerHeap.getSize():
-        if input > -1 * smallerHeap.getTop():
-            biggerHeap.insert(input)
+    print(random_7(), end=' ')
+print("random 7 based on random 5")
+
+
+def get_median(input, small_heap, big_heap):
+    if len(small_heap) == len(big_heap):
+        if not small_heap or input <= big_heap[0]:
+            hq.heappush(small_heap, -input)
         else:
-            smallerHeap.insert(-1 * input)
-            biggerHeap.insert(-1 * smallerHeap.pop())
-    elif smallerHeap.getSize() == biggerHeap.getSize():
-        if input > -1 * smallerHeap.getTop():
-            biggerHeap.insert(input)
-            smallerHeap.insert(-1 * biggerHeap.pop())
-        else:
-            smallerHeap.insert(-1 * input)
-    if smallerHeap.getSize() == biggerHeap.getSize():
-        return (-1 * smallerHeap.getTop() + biggerHeap.getTop()) / 2
+            hq.heappush(small_heap, -1 * hq.heappop(big_heap))
+            hq.heappush(big_heap, input)
     else:
-        return -1 * smallerHeap.getTop()
+        if input >= -1 * small_heap[0]:
+            hq.heappush(big_heap, input)
+        else:
+            hq.heappush(big_heap, -1 * hq.heappop(small_heap))
+            hq.heappush(small_heap, -input)
+    if len(small_heap) == len(big_heap):
+        return (big_heap[0] - small_heap[0]) / 2
+    return -1 * small_heap[0]
 
-for element in testFlow2:
-    print(getMedianOfFlow(element), end=' ')
+
+s_heap = []
+b_heap = []
+for element in test_flow2:
+    print(get_median(element, s_heap, b_heap), end=' ')
 print()

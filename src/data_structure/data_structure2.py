@@ -112,6 +112,7 @@ class ListNode(object):
     def __init__(self, value):
         self.value = value
         self.next = None
+        self.pre = None
 
 
 def reverse_linked_list_iteration(head):

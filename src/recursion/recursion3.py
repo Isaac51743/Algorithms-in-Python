@@ -1,7 +1,8 @@
-import tree as T
-import data_structure2 as DS2
-print()
-print('Recursion3:')
+import tree as t
+from collections import defaultdict
+import data_structure2 as ds2
+
+print("recursion3:")
 #            4
 #          /    \
 #        3        5
@@ -9,219 +10,218 @@ print('Recursion3:')
 #    1         6     7
 #  /   \
 # 0     2
-treeNodeList = []
+tree_node_list = []
 for i in range(8):
-    treeNodeList.append(T.TreeNode(i))
-treeNodeList[4].leftChild = treeNodeList[3]
-treeNodeList[4].rightChild = treeNodeList[5]
-treeNodeList[3].leftChild = treeNodeList[1]
-treeNodeList[1].leftChild = treeNodeList[0]
-treeNodeList[1].rightChild = treeNodeList[2]
-treeNodeList[5].leftChild = treeNodeList[6]
-treeNodeList[5].rightChild = treeNodeList[7]
+    tree_node_list.append(t.TreeNode(i))
+tree_node_list[4].left_child = tree_node_list[3]
+tree_node_list[4].right_child = tree_node_list[5]
+tree_node_list[3].left_child = tree_node_list[1]
+tree_node_list[1].left_child = tree_node_list[0]
+tree_node_list[1].right_child = tree_node_list[2]
+tree_node_list[5].left_child = tree_node_list[6]
+tree_node_list[5].right_child = tree_node_list[7]
 
-def isBalancedTree(root):
-    if root == None:
+
+def is_balanced(root):
+    if not root:
         return 0
-    leftHeight = isBalancedTree(root.leftChild)
-    rightHeight = isBalancedTree(root.rightChild)
-    if leftHeight < 0 or rightHeight < 0 or abs(leftHeight - rightHeight) > 1:
+    left_height = is_balanced(root.left_child)
+    right_height = is_balanced(root.right_child)
+    if left_height == -1 or right_height == -1 or abs(left_height - right_height) > 1:
         return -1
     else:
-        return max(leftHeight, rightHeight) + 1
+        return max(left_height, right_height) + 1
 
-print('is balanced tree:', isBalancedTree(treeNodeList[0]) != -1)
-# -----------------------------------------------------------------------------------
-def findMaxSumFromLeafToLeaf(root):
-    if root == None:
+
+print('is balanced tree:', is_balanced(tree_node_list[0]) != -1)
+
+
+def max_sum_leaf_leaf(root):
+    if not root:
         return 0
-    leftSumOfPath = findMaxSumFromLeafToLeaf(root.leftChild)
-    rightSumOfPath = findMaxSumFromLeafToLeaf(root.rightChild)
-    global maxSumFromLeafToLeaf
-    if root.leftChild and root.rightChild and maxSumFromLeafToLeaf < leftSumOfPath + rightSumOfPath + root.value:
-        maxSumFromLeafToLeaf = leftSumOfPath + rightSumOfPath + root.value
-    return max(leftSumOfPath, rightSumOfPath) + root.value
 
-def findMaxSumOfAnyPath(root):
-    if root == None:
+    left_sum = max_sum_leaf_leaf(root.left_child)
+    right_sum = max_sum_leaf_leaf(root.right_child)
+    global max_leaf_leaf
+    if root.left_child and root.right_child and max_leaf_leaf < root.value + left_sum + right_sum:
+        max_leaf_leaf = root.value + left_sum + right_sum
+    return max(left_sum, right_sum) + root.value
+
+
+def max_sum_path(root):
+    if not root:
         return 0
-    leftSumOfPath = max(0, findMaxSumFromLeafToLeaf(root.leftChild))
-    rightSumOfPath = max(0, findMaxSumFromLeafToLeaf(root.rightChild))
-    global maxSumFromLeafToLeaf
-    if maxSumFromLeafToLeaf < leftSumOfPath + rightSumOfPath + root.value:
-        maxSumFromLeafToLeaf = leftSumOfPath + rightSumOfPath + root.value
-    return max(leftSumOfPath, rightSumOfPath) + root.value
+    left_sum = max(0, max_sum_path(root.left_child))
+    right_sum = max(0, max_sum_path(root.right_child))
+    global max_path
+    if max_path < left_sum + right_sum + root.value:
+        max_path = left_sum + right_sum + root.value
+    return max(left_sum, right_sum) + root.value
 
-treeNodeList[6].value = -10
-treeNodeList[0].value = -10
-maxSumFromLeafToLeaf = float('-inf')
-findMaxSumFromLeafToLeaf(treeNodeList[4])
-print('sum of max path from leaf to leaf', maxSumFromLeafToLeaf)
 
-maxSumOfPath = float('-inf')
-findMaxSumOfAnyPath(treeNodeList[5])
-print('sum of max path in the tree', maxSumOfPath)
-treeNodeList[6].value = 6
-treeNodeList[0].value = 0
-# -----------------------------------------------------------------------------------
-# down to up
-def findMaxSumFromRootToLeaf(root):
-    if root == None:
+tree_node_list[6].value = -10
+tree_node_list[0].value = -10
+max_leaf_leaf = float('-inf')
+max_sum_leaf_leaf(tree_node_list[4])
+print('sum of max path from leaf to leaf', max_leaf_leaf)
+
+max_path = float('-inf')
+max_sum_path(tree_node_list[5])
+print('sum of max path in the tree', max_path)
+tree_node_list[6].value = 6
+tree_node_list[0].value = 0
+
+
+def max_sum_root_leaf(root, prefix):
+    if not root:
+        return
+    elif not root.left_child and not root.right_child:
+        global max_leaf_root
+        max_leaf_root = max(max_leaf_root, prefix + root.value)
+    max_sum_root_leaf(root.left_child, prefix + root.value)
+    max_sum_root_leaf(root.right_child, prefix + root.value)
+
+
+max_leaf_root = float('-inf')
+tree_node_list[0].value = tree_node_list[1].value = tree_node_list[2].value = -10
+max_sum_root_leaf(tree_node_list[3], 0)
+print("max sum from root to leaf: ", max_leaf_root)
+tree_node_list[0].value = 0
+tree_node_list[1].value = 1
+tree_node_list[2].value = 2
+#            4
+#          /    \
+#        3        5
+#      /        /   \
+#    1         6     7
+#  /   \
+# 0     2
+
+
+def target_sum_leaf_root(root, pre_values, target):
+    if root is None:
+        return
+    pre_values.append(root.value)
+    temp_sum = 0
+    for i in range(1, len(pre_values) + 1):
+        temp_sum += pre_values[-i]
+        if temp_sum == target:
+            global target_existed
+            target_existed = True
+            break
+    target_sum_leaf_root(root.left_child, pre_values, target)
+    target_sum_leaf_root(root.right_child, pre_values, target)
+    pre_values.pop()
+
+
+def target_sum_leaf_root_adv(root, prefix, prefix_dict, target):
+    if root is None:
+        return
+    if prefix_dict[prefix + root.value - target] > 0 or prefix + root.value == target:
+        global target_existed
+        target_existed = True
+    prefix_dict[prefix + root.value] += 1
+    target_sum_leaf_root_adv(root.left_child, prefix + root.value, prefix_dict, target)
+    target_sum_leaf_root_adv(root.right_child, prefix + root.value, prefix_dict, target)
+    prefix_dict[prefix + root.value] -= 1
+
+
+target_existed = False
+target_sum_leaf_root(tree_node_list[4], [], 3)
+print("target existed: ", target_existed)
+target_existed = False
+target_sum_leaf_root_adv(tree_node_list[4], 0, defaultdict(int), 13)
+print("target existed: ", target_existed)
+
+
+def max_sum_single_path(root, prefix):
+    if root is None:
+        return
+    if prefix <= 0:
+        new_prefix = root.value
+    else:
+        new_prefix = root.value + prefix
+    global max_single_path
+    max_single_path = max(max_single_path, new_prefix)
+    max_sum_single_path(root.left_child, new_prefix)
+    max_sum_single_path(root.right_child, new_prefix)
+
+
+def max_sum_single_path_adv(root):
+    if root is None:
         return 0
-    leftSumOfPath = findMaxSumFromRootToLeaf(root.leftChild)
-    rightSumOfPath = findMaxSumFromRootToLeaf(root.rightChild)
-    return max(leftSumOfPath, rightSumOfPath) + root.value
-# up to down
-def findMaxSumFromRootToLeafUpToDown(root, temporarySum):
-    if root == None:
+    left = max(0, max_sum_single_path_adv(root.left_child))
+    right = max(0, max_sum_single_path_adv(root.right_child))
+    global max_single_path_adv
+    max_single_path_adv = max(max_single_path_adv, max(left, right) + root.value)
+    return max(left, right) + root.value
+
+
+max_single_path = max_single_path_adv = float("-inf")
+max_sum_single_path(tree_node_list[4], 0)
+max_sum_single_path_adv(tree_node_list[3])
+print(max_single_path, max_single_path_adv)
+
+
+def tree_doubly_list(root):
+    if root is None:
         return
-    if root.leftChild == None and root.rightChild == None:
-        global maxSumFromRootToLeaf
-        maxSumFromRootToLeaf = max(maxSumFromRootToLeaf, temporarySum + root.value)
-    findMaxSumFromRootToLeafUpToDown(root.leftChild, temporarySum + root.value)
-    findMaxSumFromRootToLeafUpToDown(root.rightChild, temporarySum + root.value)
+    tree_doubly_list(root.left_child)
+    global list_tail
+    list_tail.next = ds2.ListNode(root.value)
+    list_tail.next.pre = list_tail
+    list_tail = list_tail.next
+    tree_doubly_list(root.right_child)
 
-print('maxSumFromRootToLeaf(down to up):', findMaxSumFromRootToLeaf(treeNodeList[4]))
-maxSumFromRootToLeaf = float('-inf')
-findMaxSumFromRootToLeafUpToDown(treeNodeList[4], 0)
-print('maxSumFromRootToLeaf(up to down):', maxSumFromRootToLeaf)
-# -----------------------------------------------------------------------------------
-def findSinglePathWithTargetSum(root, sumEndWithPreviousNode, targetSum):
-    if root == None:
-        return
-    global pathExisted
-    sumEndWithPreviousNode.append(0)
-    for index in range(len(sumEndWithPreviousNode)):
-        sumEndWithPreviousNode[index] += root.value
-    if targetSum in sumEndWithPreviousNode:
-        pathExisted = True
-    findSinglePathWithTargetSum(root.leftChild, sumEndWithPreviousNode, targetSum)
-    findSinglePathWithTargetSum(root.rightChild, sumEndWithPreviousNode, targetSum)
-    sumEndWithPreviousNode.pop()
-    for index in range(len(sumEndWithPreviousNode)):
-        sumEndWithPreviousNode[index] -= root.value
 
-def findSinglePathWithTargetSumAdv(root, pathPrefixRecord, pathPrefix, targetSum):
-    if root == None:
-        return
-    global pathExisted
-    if pathPrefix + root.value == targetSum or pathPrefix + root.value - targetSum in pathPrefixRecord:
-        pathExisted = True
-    if pathPrefix + root.value in pathPrefixRecord:
-        pathPrefixRecord[pathPrefix + root.value] += 1
-    else:
-        pathPrefixRecord[pathPrefix + root.value] = 1
-    findSinglePathWithTargetSumAdv(root.leftChild, pathPrefixRecord, pathPrefix + root.value, targetSum)
-    findSinglePathWithTargetSumAdv(root.rightChild, pathPrefixRecord, pathPrefix + root.value, targetSum)
-    if pathPrefixRecord[pathPrefix + root.value] > 1:
-        pathPrefixRecord[pathPrefix + root.value] -= 1
-    else:
-        del pathPrefixRecord[pathPrefix + root.value]
+dummy = list_tail = ds2.ListNode(0)
+tree_doubly_list(tree_node_list[4])
+ds2.linked_list_print(dummy.next)
 
-pathExisted = False
-findSinglePathWithTargetSum(treeNodeList[4], [], 12)
-print('path Existed?', pathExisted)
-findSinglePathWithTargetSumAdv(treeNodeList[0], {}, 0, 12)
-print('path Existed?', pathExisted)
-# -----------------------------------------------------------------------------------
-def findMaxSumOfSinglePath1(root, pathPrefix):
-    if root == None:
-        return
-    global maxSumOfSinglePath
-    if pathPrefix > 0:
-        maxSumOfSinglePath = max(maxSumOfSinglePath, pathPrefix + root.value)
-    else:
-        maxSumOfSinglePath = max(maxSumOfSinglePath, root.value)
-    findMaxSumOfSinglePath1(root.leftChild, pathPrefix + root.value)
-    findMaxSumOfSinglePath1(root.rightChild, pathPrefix + root.value)
 
-def findMaxSumOfSinglePath2(root):
-    if root == None:
-        return 0
-    global maxSumOfSinglePath
-    leftMaxSum = findMaxSumOfSinglePath2(root.leftChild)
-    rightMaxSum = findMaxSumOfSinglePath2(root.rightChild)
-    if leftMaxSum < 0 and rightMaxSum < 0:
-        currentMaxSum = root.value
-    else:
-        currentMaxSum = max(leftMaxSum, rightMaxSum) + root.value
-    maxSumOfSinglePath = max(maxSumOfSinglePath, currentMaxSum)
-    return currentMaxSum
-
-maxSumOfSinglePath = float('-inf')
-findMaxSumOfSinglePath1(treeNodeList[4], 0)
-print('maxSumOfSinglePath:', maxSumOfSinglePath)
-
-treeNodeList[4].value = -19
-maxSumOfSinglePath = float('-inf')
-findMaxSumOfSinglePath2(treeNodeList[4])
-print('maxSumOfSinglePath:', maxSumOfSinglePath)
-treeNodeList[4].value = 4
-# -------------------------------------------------------------------------------------
-def treeToLinkedList(root):
-    if root == None:
+def preorder_tree(preorder, l_preorder, r_preorder, inorder, l_inorder, r_inorder, inorder_dict):
+    if l_inorder > r_inorder:
         return None
-    head = tail = None
-
-    def inorderTraverse(root):
-        if root == None:
-            return
-        nonlocal head, tail
-        inorderTraverse(root.leftChild)
-        if tail == None:
-            head = DS2.ListNode(root.value)
-            tail = head
-        else:
-            tail.next = DS2.ListNode(root.value)
-            tail = tail.next
-        inorderTraverse(root.rightChild)
-
-    inorderTraverse(root)
-    return head
-
-DS2.linkedListPrint(treeToLinkedList(treeNodeList[4]))
-# -------------------------------------------------------------------------------------
-def preorderToTree(preorderArray, leftIndexPreorder, rightIndexPreorder, inorderArray, leftIndexInorder, rightIndexInorder, inorderDictionary):
-    if leftIndexPreorder > rightIndexPreorder:
-        return None
-    root = T.TreeNode(preorderArray[leftIndexPreorder])
-    leftSize = inorderDictionary[preorderArray[leftIndexPreorder]] - leftIndexInorder
-    root.leftChild = preorderToTree(preorderArray, leftIndexPreorder + 1, leftIndexPreorder + leftSize, inorderArray, leftIndexInorder, inorderDictionary[preorderArray[leftIndexPreorder]] - 1, inorderDictionary)
-    root.rightChild = preorderToTree(preorderArray, leftIndexPreorder + leftSize + 1, rightIndexPreorder, inorderArray, inorderDictionary[preorderArray[leftIndexPreorder]] + 1, rightIndexInorder, inorderDictionary)
+    root = t.TreeNode(preorder[l_preorder])
+    left_size = inorder_dict[preorder[l_preorder]] - l_inorder
+    root.left_child = preorder_tree(preorder, l_preorder + 1, l_preorder + left_size, inorder, l_inorder, l_inorder + left_size - 1, inorder_dict)
+    root.right_child = preorder_tree(preorder, l_preorder + left_size + 1, r_preorder, inorder, l_inorder + left_size + 1, r_inorder, inorder_dict)
     return root
 
-def levelorderToTree(levelorderArray, inorderArray, leftIndexInorder, rightIndexInorder, inorderDictionary):
-    if leftIndexInorder > rightIndexInorder:
-        return None
-    root = T.TreeNode(levelorderArray[0])
-    leftSize = inorderDictionary[levelorderArray[0]] - leftIndexInorder
-    leftLevelorder = []
-    rightLevelorder = []
-    for index in range(1, len(levelorderArray)):
-        if inorderDictionary[levelorderArray[index]] < inorderDictionary[levelorderArray[0]]:
-            leftLevelorder.append(levelorderArray[index])
-        else:
-            rightLevelorder.append(levelorderArray[index])
-    root.leftChild = levelorderToTree(leftLevelorder, inorderArray, 0, inorderDictionary[levelorderArray[0]] - 1, inorderDictionary)
-    root.rightChild = levelorderToTree(rightLevelorder, inorderArray, inorderDictionary[levelorderArray[0]] + 1, rightIndexInorder, inorderDictionary)
-    return root
 
-inorderArray = [3, 2, 1]
-preorderArray = [1, 2, 3]
-inorderDictionaryOfIndex = {}
-for index in range(len(inorderArray)):
-    inorderDictionaryOfIndex[inorderArray[index]] = index
+inorder_array = [3, 2, 1]
+preorder_array = [1, 2, 3]
+inorder_dict = {}
+for index in range(len(inorder_array)):
+    inorder_dict[inorder_array[index]] = index
 
-testRoot1 = preorderToTree(preorderArray, 0, len(preorderArray) - 1, inorderArray, 0, len(inorderArray) - 1, inorderDictionaryOfIndex)
-T.inOrder(testRoot1)
+
+test_root1 = preorder_tree(preorder_array, 0, len(preorder_array) - 1, inorder_array, 0, len(preorder_array) - 1, inorder_dict)
+t.in_order(test_root1)
 print()
-T.preOrder(testRoot1)
+t.pre_order(test_root1)
 print()
 
-levelorderArray = [1, 2, 3]
-testRoot2 = levelorderToTree(levelorderArray, inorderArray, 0, len(inorderArray) - 1, inorderDictionaryOfIndex)
-T.inOrder(testRoot2)
-print()
-T.preOrder(testRoot2)
-print()
+# def levelorderToTree(levelorderArray, inorderArray, leftIndexInorder, rightIndexInorder, inorderDictionary):
+#     if leftIndexInorder > rightIndexInorder:
+#         return None
+#     root = T.TreeNode(levelorderArray[0])
+#     leftSize = inorderDictionary[levelorderArray[0]] - leftIndexInorder
+#     leftLevelorder = []
+#     rightLevelorder = []
+#     for index in range(1, len(levelorderArray)):
+#         if inorderDictionary[levelorderArray[index]] < inorderDictionary[levelorderArray[0]]:
+#             leftLevelorder.append(levelorderArray[index])
+#         else:
+#             rightLevelorder.append(levelorderArray[index])
+#     root.leftChild = levelorderToTree(leftLevelorder, inorderArray, 0, inorderDictionary[levelorderArray[0]] - 1, inorderDictionary)
+#     root.rightChild = levelorderToTree(rightLevelorder, inorderArray, inorderDictionary[levelorderArray[0]] + 1, rightIndexInorder, inorderDictionary)
+#     return root
+
+# levelorderArray = [1, 2, 3]
+# testRoot2 = levelorderToTree(levelorderArray, inorderArray, 0, len(inorderArray) - 1, inorderDictionaryOfIndex)
+# T.inOrder(testRoot2)
+# print()
+# T.preOrder(testRoot2)
+# print()
 

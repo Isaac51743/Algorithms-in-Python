@@ -26,8 +26,8 @@ while not queue2.is_empty():
     print(queue2.pop(), end=' ')
 print()
 
-testArray = [6, 6, 3, 6, 3, 3, 1, 2, 3]
 print('stack with min():')
+testArray = [6, 6, 3, 6, 3, 3, 1, 2, 3]
 stack2 = ds1.StackWithMin1()
 for num in testArray:
     stack2.push(num)

@@ -121,8 +121,6 @@ def in_order_in_range(root, small_bound, big_bound):
         in_order_in_range(root.right_child, small_bound, big_bound)
 
 
-
-# -----------------------------------------------------------------------------------
 # def searchBST(root, target):
 #     if root == None or root.value == target:
 #         return root

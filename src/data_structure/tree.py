@@ -121,143 +121,139 @@ def in_order_in_range(root, small_bound, big_bound):
         in_order_in_range(root.right_child, small_bound, big_bound)
 
 
-# def searchBST(root, target):
-#     if root == None or root.value == target:
-#         return root
-#     if root.value > target:
-#         return searchBST(root.leftChild, target)
-#     else:
-#         return searchBST(root.rightChild, target)
-#
-# def insertBSTRecursion1(root, target):
-#     if root == None:
-#         return TreeNode(target)
-#     if root.value > target:
-#         root.leftChild = insertBSTRecursion1(root.leftChild, target)
-#     elif root.value < target:
-#         root.rightChild = insertBSTRecursion1(root.rightChild, target)
-#     return root
-#
-# def insertBSTIteration1(root, target):
-#     if root == None:
-#         return TreeNode(target)
-#     preNode = None
-#     curNode = root
-#     while curNode != None:
-#         preNode = curNode
-#         if curNode.value > target:
-#             curNode = curNode.leftChild
-#         elif curNode.value < target:
-#             curNode = curNode.rightChild
-#         else:
-#             return root
-#     if preNode.value > target:
-#         preNode.leftChild = TreeNode(target)
-#     elif preNode.value < target:
-#         preNode.rightChild = TreeNode(target)
-#     return root
-#
-# def insertBSTRecursion2(root, target):
-#     if root == None:
-#         return TreeNode(target)
-#     helper(root, target)
-#     return root
-# def helper(root, target):
-#     if root.value > target:
-#         if root.leftChild != None:
-#             helper(root.leftChild, target)
-#         else:
-#             root.leftChild = TreeNode(target)
-#     elif root.value < target:
-#         if root.rightChild != None:
-#             helper(root.rightChild, target)
-#         else:
-#             root.rightChild = TreeNode(target)
-#
-# def insertBSTIteration2(root, target):
-#     if root == None:
-#         return TreeNode(target)
-#     curNode = root
-#     while curNode.value != target:
-#         if curNode.value < target:
-#             if curNode.rightChild != None:
-#                 curNode = curNode.rightChild
-#             else:
-#                 curNode.rightChild = TreeNode(target)
-#                 break
-#         elif curNode.value > target:
-#             if curNode.leftChild != None:
-#                 curNode = curNode.leftChild
-#             else:
-#                 curNode.leftChild = TreeNode(target)
-#                 break
-#     return root
-# def removeBST(root, target):
-#     if root == None:
-#         return None
-#     if target < root.value:
-#         root.leftChild = removeBST(root.leftChild, target)
-#     elif target > root.value:
-#         root.rightChild = removeBST(root.rightChild, target)
-#     else:
-#         if root.leftChild == None:
-#             return root.rightChild
-#         elif root.rightChild == None:
-#             return root.leftChild
-#         else:
-#             if root.rightChild.leftChild == None:
-#                 root.rightChild.leftChild = root.leftChild
-#                 return root.right
-#             else:
-#                 smallestOnRight = deleteMin(root.rightChild)
-#                 smallestOnRight.leftChild = root.leftChild
-#                 smallestOnRight.rightChild = root.rightChild
-#                 return smallestOnRight
-#     return root
-# # assuming root must has left child
-# def deleteMin(root):
-#     preNode = root
-#     curNode = root.leftChild
-#     while curNode != None:
-#         preNode = curNode
-#         curNode = curNode.leftChild
-#     preNode.leftChild = curNode.rightChild
-#     return curNode
-#
-# print(searchBST(testRoot3, 10))
-# newRoot3 = insertBSTRecursion2(testRoot3, 1)
-# print(searchBST(newRoot3, 1))
-# newRoot3 = insertBSTIteration2(newRoot3, 2)
-# print(searchBST(newRoot3, 2))
-# newRoot3 = removeBST(newRoot3, 1)
-# print(searchBST(newRoot3, 1))
-# #------------------------------------------------------------------------------------
-# def preOrderIteration(root):
-#     if root == None:
-#         return
-#     stack = DS1.Stack()
-#     stack.push(root)
-#     while not stack.isEmpty():
-#         curNode = stack.pop()
-#         print(curNode.value, end=' ')
-#         if curNode.rightChild != None:
-#             stack.push(curNode.rightChild)
-#         if curNode.leftChild != None:
-#             stack.push(curNode.leftChild)
-#
-# def inOrderIteration(root):
-#     if root == None:
-#         return
-#     stack = DS1.Stack()
-#     nextNode = root
-#     while not stack.isEmpty() or nextNode != None:
-#         if nextNode != None:
-#             stack.push(nextNode)
-#             nextNode = nextNode.leftChild
-#         else: # top element is the stack has no left child any more
-#             curNode = stack.pop()
-#             print(curNode.value, end=' ')
-#             nextNode = curNode.rightChild
+def search_bst(root, target):
+    if root is None:
+        return None
+    if root.value < target:
+        return search_bst(root.right_child, target)
+    elif root.value > target:
+        return search_bst(root.left_child, target)
+    else:
+        return root
+
+
+def insert_bst_recursion1(root, target):
+    if root is None:
+        return TreeNode(target)
+    if root.value < target:
+        root.right_child = insert_bst_recursion1(root.right_child, target)
+    elif root.value > target:
+        root.left_child = insert_bst_recursion1(root.left_child, target)
+    return root
+
+
+def insert_bst_iteration(root, target):
+    if root is None:
+        return TreeNode(target)
+    pre = None
+    cur = root
+    while cur is not None:
+        pre = cur
+        if cur.value < target:
+            cur = cur.right_child
+        elif cur.value > target:
+            cur = cur.left_child
+        else:
+            return root
+    if pre.value < target:
+        pre.right_child = TreeNode(target)
+    else:
+        pre.left_child = TreeNode(target)
+    return root
+
+
+def insert_bst_recursion2(root, target):
+    if root is None:
+        return TreeNode(target)
+    helper(root, target)
+    return root
+
+
+def helper(root, target):
+    if root.value > target:
+        if root.left_child:
+            helper(root.left_child, target)
+        else:
+            root.left_child = TreeNode(target)
+    elif root.value < target:
+        if root.right_child:
+            helper(root.right_child, target)
+        else:
+            root.right_child = TreeNode(target)
+
+
+def remove_bst(root, target):
+    if root is None:
+        return root
+    if root.value < target:
+        root.right_child = remove_bst(root.right_child, target)
+        return root
+    elif root.value > target:
+        root.left_child = remove_bst(root.left_child, target)
+        return root
+    else:
+        if root.left_child is None and root.right_child is None:
+            return None
+        elif root.left_child is None:
+            return root.right_child
+        elif root.right_child is None:
+            return root.left_child
+        else:
+            if root.right.left is None:
+                root.rihgt.left = root.left
+                return root.right
+            elif root.left.right is None:
+                root.left.right = root.right
+                return root.left
+            else:
+                min_in_right = remove_min(root.right)
+                min_in_right.left_child = root.left_child
+                min_in_right.right_child = root.right_child
+                return min_in_right
+
+
+def remove_min(root):
+    if root is None or root.left_child is None:
+        return None
+    pre = root
+    cur = root.left_child
+    while cur.left_child:
+        pre = cur
+        cur = cur.left_child
+    pre.left_child = cur.right_child
+    return cur
+
+
+def pre_order_iteration(root):
+    if root is None:
+        return
+    stack = [root]
+    while len(stack) > 0:
+        temp = stack.pop()
+        print(temp.value, end=" ")
+        if temp.right_child:
+            stack.append(temp.right_child)
+        if temp.left_child:
+            stack.append(temp.left_child)
+    return
+
+
+def in_order_iteration(root):
+    if root is None:
+        return []
+    next_to_visit = root
+    stack = []
+    while len(stack) > 0 or next_to_visit:
+        if next_to_visit is None:
+            temp = stack.pop()
+            print(temp.value, end=" ")
+            next_to_visit = temp.right_child
+        else:
+            stack.append(next)
+            next_to_visit = next_to_visit.left_child
+
+
+
 #
 # def postOrderIteration(root):
 #     if root == None:

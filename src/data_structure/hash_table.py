@@ -55,6 +55,7 @@ def findMissingNum3(array): # assuming only one missing number
 testList1 = [3, 2, 7, 4, 10, 6, 9, 8]
 print(findMissingNum3(testList1))
 
+
 def findCommonNumbersBetween2SortedLists1(array1, array2):
     if len(array1) == 0 or len(array2) == 0:
         return None
@@ -74,6 +75,7 @@ def findCommonNumbersBetween2SortedLists1(array1, array2):
                 result.add(number)
     return result
 
+
 def findCommonNumbersBetween2SortedLists2(array1, array2):
     if len(array1) == 0 or len(array2) == 0:
         return None
@@ -90,6 +92,7 @@ def findCommonNumbersBetween2SortedLists2(array1, array2):
             index1 += 1
             index2 += 1
     return result
+
 
 testList2 = [1, 3, 5, 7, 8, 12, 24]
 testList3 = [1, 3, 6, 7, 10, 12, 14]

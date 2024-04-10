@@ -139,7 +139,7 @@ def binary_search_first_occur_index2(array, target) -> int:
         return -1
     left_index = 0
     right_index = len(array) - 1
-    while left_index < right_index - 1:
+    while left_index < right_index:
         mid_index = left_index + (right_index - left_index) // 2
         if array[mid_index] < target:
             left_index = mid_index + 1

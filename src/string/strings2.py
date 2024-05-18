@@ -211,11 +211,12 @@ def find_longest_substring_k(text, k):
 
 
 def find_longest_substring_kzeros(text, k):
-    if not text or k <= 0:
+    if not text or k < 0:
         return ""
     zero_num = 0
     left = 0
-    final_left = final_right = 0
+    final_left = 0
+    final_right = -1
     for right in range(len(text)):
         if text[right] == "0":
             if zero_num < k:
